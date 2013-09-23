@@ -9,7 +9,8 @@ Notes for FP Talk
   of data.
 
 * Functional: think of results, not steps.  (In fact true of all declarative
-  languages.)
+  languages.)  Think also of skipping a number of `if` statements, especially
+  in pattern-matching languages.
 
 * Some features of FP:
 
