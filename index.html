@@ -1,4 +1,4 @@
-?<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -32,6 +32,44 @@
     <h2>Scott Sauyet</h2>
 </section>
 
+<section class="slide">
+	<h2>An Overview of Functional Techniques<br/>
+        (for non FP'ers) using Javascript</h2>
+    <h3>Agenda</h3>
+    <ul>
+        <li>What is Functional Programming?</li>
+        <li>How Functional Programming Differs From Other Paradigms</li>
+        <li>Functional Programming in Javascript</li>
+        <li>Advantages and Disadvantages of Functional Style</li>
+        <li>Interaction of Functional and Object-Oriented Styles</li>
+    </ul>
+</section>
+
+<section class="slide">
+	<h2>What is Functional Programming?</h2>
+    <div class="slide">
+        <h3>No Single Definition</h3>
+        <p>There is no clear, widely-accepted definition of Functional Programming.  It is a collection of
+           related featues which cohere well into a very useful style of programming, including:</p>
+    </div>
+    <div>
+        <ul>
+            <li class="slide">First-class functions</li>
+            <li class="slide">Lambdas/Anonymous Functions with closures</li>
+            <li class="slide">Compact, even terse, functions</li>
+            <li class="slide">Mostly stateless processing, side-effect-free function calls</li>
+            <li class="slide">Performant recursion through tail call optimization</li>
+            <li class="slide">Pattern matching (Haskell, Erlang)</li>
+            <li class="slide">Lazy Evaluation (Miranda, Haskell)</li>
+            <li class="slide">Homoiconicity (mostly LISP-like languages?)</li>
+        </ul>
+    </div>
+    <div class="slide">
+        <h3>Not all are available in Javascript</h3>
+        <p>The first three are freely available; the fourth we can mostly achieve with some discipline;
+           the others are beyond the abilities of the language.  We won't discuss them much.</p>
+    </div>
+</section>
 
 <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
 <a href="#" class="deck-next-link" title="Next">&#8594;</a>
@@ -66,11 +104,6 @@
 <script src="extensions/codemirror/deck.codemirror.js"></script>
 
 <script>
-    var add1 = function(x) {return x + 1;};
-    var mult2 = function(x) {return x * 2;};
-    var square = function(x) {return x * x;};
-    var negate = function(x) {return -x;};
-
 	$(function() {
 		$.deck('.slide');
 	});
