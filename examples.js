@@ -53,3 +53,25 @@ var getIncompleteTaskSummariesForUser = function(userName) {
             return tasks;
         });
 };
+/*
+
+I was just thinking about the API for useWith and wondering if there might not be more obvious alternatives than this:
+
+    var project = useWith(map, pickAll, identity);
+    var propMatches = useWith(pipe, prop, eq);
+
+This might be cleaner:
+
+    var project = useWith(map)(pickAll, identity);
+    var propMatches = useWith(pipe)(prop, eq);
+
+But this might be even more obvious:
+
+    var project = use(map).with(pickAll, identity);
+    var propMatches = use(pipe).with(prop, eq);
+
+There are those who wouldn't like that last one in a functional library, as it sounds a little like OO, but I'm not worried by those kinds of concerns.
+
+What do you think?
+
+*/
