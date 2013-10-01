@@ -50,26 +50,109 @@
     <div class="slide">
         <h3>No Single Definition</h3>
         <p>There is no clear, widely-accepted definition of Functional Programming.  It is a collection of
-           related featues which cohere well into a very useful style of programming, including:</p>
-    </div>
-    <div>
+           related featues which cohere well into a very useful style of programming.</p>
         <ul>
-            <li class="slide">First-class functions</li>
-            <li class="slide">Lambdas/Anonymous Functions with closures</li>
-            <li class="slide">Compact, even terse, functions</li>
-            <li class="slide">Mostly stateless processing, side-effect-free function calls</li>
-            <li class="slide">Performant recursion through tail call optimization</li>
-            <li class="slide">Pattern matching (Haskell, Erlang)</li>
-            <li class="slide">Lazy Evaluation (Miranda, Haskell)</li>
-            <li class="slide">Homoiconicity (mostly LISP-like languages?)</li>
+            <li>Some of these features are readily available in Javascript.</li>
+            <li>Others can be used if care is taken.</li>
+            <li>And some are essentially impossible at the language level.</li>
         </ul>
     </div>
+</section>
+
+<section class="slide">
+    <h2>Easily available in Javascript</h2>
+    <ul>
+        <li class="slide">First-class functions</li>
+        <li class="slide">Lambdas/Anonymous Functions with closures</li>
+        <li class="slide">Compact, even terse, functions</li>
+    </ul>
+    <h2 class="slide">Possible to accomplish in Javascript with some care</h2>
+    <ul>
+        <li class="slide">Mostly stateless processing</li>
+        <li class="slide">Side-effect-free function calls</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Not available in current versions Javascript</h2>
+    <ul>
+        <li class="slide">Performant recursion through tail call optimization</li>
+        <li class="slide">Pattern matching (Haskell, Erlang)</li>
+        <li class="slide">Lazy Evaluation (Miranda, Haskell)</li>
+        <li class="slide">Homoiconicity (mostly LISP-like languages?)</li>
+    </ul>
     <div class="slide">
-        <h3>Not all are available in Javascript</h3>
-        <p>The first three are freely available; the fourth we can mostly achieve with some discipline;
-           the others are beyond the abilities of the language.  We won't discuss them much.</p>
+        <hr/>
+        <p>We will take a look a brief look at these functional programming features of other languages first, then turn
+           our focus to those things we can actually accomplish in Javascript.</p>
     </div>
 </section>
+
+<section class="slide">
+    <h2>Shared Example</h2>
+    <p>Following an example from <a href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">Paul Barry</a> we will use the example of the chances of winning a lottery.</p>
+    <p>Here is an iterative version of the code:</p>
+    <div>
+        <textarea  class="code" mode="javascript" style="display: none;" runnable="false">// Chances of winning lottery
+
+function odds(n, p) {
+    var acc = 1;
+    for(var i = 0; i < n; i++) {
+        acc *= (n - i) / (p - i);
+    }
+    return acc;
+}
+
+console.log(odds(3, 10)); //=> (3/10) * (2/9) * (1/8) => (1/120) => 0.008333333333333333</textarea>
+    </div>
+</section>
+
+<section class="slide">
+    <h2>Recursive Version</h2>
+    <p>This is similar, but written recursively:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;" runnable="false">// Recursive version
+
+function odds(n, p) {
+    return (n == 0) ? 1 : (n / p) * odds(n - 1, p - 1);
+}</textarea></div>
+
+    <div class="slide">
+        <br/>
+        <p>There are many reasons that functional programmers prefer recursion, but one very simple one is that
+           recursive functions are often much more elegant than their iterative cousins.</p>
+    </div>
+</section>
+
+<section class="slide">
+    <h2>This code in tail-call formulation:</h2>
+    <div><textarea  class="code" mode="javascript" style="display: none;" runnable="false">// Tail-call version
+var odds = (function(){
+    var odds1 = function(n, p, acc) {
+        return (n == 0) ? acc : odds1(n - 1, p - 1, (n / p) * acc);
+    }
+
+    return function(n, p) {
+        return odds1(n, p, 1)
+    }
+})();</textarea></div>
+</section>
+
+<section class="slide">
+    <h2>Pattern Matching in Erlang</h2>
+    <h3>Simple recursive version</h3>
+    <div><textarea class="code" mode="erlang" style="display: none;" runnable="false">odds(0, _) -> 1;
+odds(N, P) -> (N / P) * odds(N - 1, P - 1).</textarea></div>
+
+    <h3>Tail-call version</h3>
+    <div><textarea class="code" mode="erlang" style="display: none;" runnable="false">-export([odds/2]).
+
+odds(N, P) -> odds(N, P, 1).
+
+odds(0, _, Acc) -> Acc;
+odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
+
+</section>
+
 
 <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
 <a href="#" class="deck-next-link" title="Next">&#8594;</a>
@@ -101,6 +184,7 @@
 <script src="extensions/scale/deck.scale.js"></script>
 <script src="extensions/codemirror/codemirror.js"></script>
 <script src="extensions/codemirror/mode/javascript/javascript.js"></script>
+<script src="extensions/codemirror/mode/erlang/erlang.js"></script>
 <script src="extensions/codemirror/deck.codemirror.js"></script>
 
 <script>
