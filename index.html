@@ -90,12 +90,12 @@
 
 <section class="slide">
     <h2>Shared Example</h2>
-    <p>Following an example from <a href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">Paul Barry</a> we will use the example of the chances of winning a lottery.</p>
+    <p>Following an example from <a href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">Paul Barry</a>
+       we will use the example of the chances of winning a lottery.  This calculates the odds of choosing the correct
+       `n` numbers out of the `p` possibilities.</p>
     <p>Here is an iterative version of the code:</p>
     <div>
-        <textarea  class="code" mode="javascript" style="display: none;" runnable="false">// Chances of winning lottery
-
-function odds(n, p) {
+        <textarea  class="code" mode="javascript" style="display: none;" runnable="false">function odds(n, p) {
     var acc = 1;
     for(var i = 0; i < n; i++) {
         acc *= (n - i) / (p - i);
@@ -103,8 +103,9 @@ function odds(n, p) {
     return acc;
 }
 
-console.log(odds(3, 10)); //=> (3/10) * (2/9) * (1/8) => (1/120) => 0.008333333333333333</textarea>
+console.log(odds(3, 10)); //=> (3/10) * (2/9) * (1/8) => (1/120) => 0.008333...</textarea>
     </div>
+    <br/>
 </section>
 
 <section class="slide">
@@ -121,12 +122,15 @@ function odds(n, p) {
         <p>There are many reasons that functional programmers prefer recursion, but one very simple one is that
            recursive functions are often much more elegant than their iterative cousins.</p>
     </div>
+    <div class="slide">
+        <p>Unfortunately, they often don't perform as well.  All the overhead of creating stack contexts for
+           function calls tends to add up.  But certain kinds of recursive calls <em>can</em> be easily optimized.</p>
+    </div>
 </section>
 
 <section class="slide">
     <h2>This code in tail-call formulation:</h2>
-    <div><textarea  class="code" mode="javascript" style="display: none;" runnable="false">// Tail-call version
-var odds = (function(){
+    <div><textarea  class="code" mode="javascript" style="display: none;" runnable="false">var odds = (function(){
     var odds1 = function(n, p, acc) {
         return (n == 0) ? acc : odds1(n - 1, p - 1, (n / p) * acc);
     }
@@ -135,22 +139,45 @@ var odds = (function(){
         return odds1(n, p, 1)
     }
 })();</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>Note that the recursive call in <code>odds1</code> is the last statement in its branch of the function.
+           If this is true for all recursive calls, then the function is <code>tail-recursive</code>, and the
+           compiler can replace the entire set of nested calls with simple <code>JUMP</code> operations.</p>
+    </div>
+    <div class="slide">
+        <p>Such optimizations are required by many functional languages.</p>
+    </div>
+    <div class="slide">
+        <p>This is slated to become required in the next version of the specification for Javascript, but it won't
+           be consistently available client-side for some time.</p>
+    </div>
 </section>
 
 <section class="slide">
-    <h2>Pattern Matching in Erlang</h2>
-    <h3>Simple recursive version</h3>
-    <div><textarea class="code" mode="erlang" style="display: none;" runnable="false">odds(0, _) -> 1;
+    <h2>Pattern Matching</h2>
+    <p>Some languages make use of an interesting techniqe to define functions: pattern matching.  Rather than use
+       <code>if-blocks</code> in the body of the function, parameters are matched to simpler functions.</p>
+    <div class="slide">
+        <h3>Simple recursive version</h3>
+        <div><textarea class="code" mode="erlang" style="display: none;" runnable="false">odds(0, _) -> 1;
 odds(N, P) -> (N / P) * odds(N - 1, P - 1).</textarea></div>
 
-    <h3>Tail-call version</h3>
-    <div><textarea class="code" mode="erlang" style="display: none;" runnable="false">-export([odds/2]).
+    </div>
+    <div class="slide">
+        <h3>Tail-call version</h3>
+        <div><textarea class="code" mode="erlang" style="display: none;" runnable="false">-export([odds/2]).
 
 odds(N, P) -> odds(N, P, 1).
-
 odds(0, _, Acc) -> Acc;
 odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
+    </div>
 
+</section>
+
+<section class="slide">
+    <h2>Lazy Evaluation</h2>
+    <p><a href="http://stackoverflow.com/questions/265392/why-is-lazy-evaluation-useful">SO Link</a></p>
 </section>
 
 
