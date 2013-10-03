@@ -177,15 +177,36 @@ odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
 
 <section class="slide">
     <h2>Lazy Evaluation</h2>
+    <p>Many of us are most familiar with languages that evaluate their expressions as soon as they're encountered.  But
+       there are some that wait until the last possible instant.  This can have some real benefits.</p>
     <div class="slide">
         <p>We'll switch example here, as there's not much call to do lazy evaluation for lottery odds.  We will follow a
            <a href="http://stackoverflow.com/a/284180/1243641">Haskell example</a> from Chris Eidhof</p>
         <div><textarea class="code" mode="haskell" style="display: none;" runnable="false">quickSort [] = []
-quickSort (x:xs) = quickSort (filter (< x) xs) ++
-                   [x] ++
-                   quickSort (filter (>= x) xs)
+quickSort (x:xs) = quickSort (filter (< x) xs)
+                   ++ [x]
+                   ++ quickSort (filter (>= x) xs)
 
 minimum ls = head (quickSort ls)</textarea></div>
+        <p>Note that the right half of quicksort is not calculated in finding the minimum.</p>
+    </div>
+    <p class="slide">One <a href="http://stackoverflow.com/a/2165370/1243641">very interesting comparison</a> is that
+       lazy evaluation is to the CPU what garbage collection is to memory.  The garbage collector allows you to pretend
+       that you have infinite memory; lazy evaluation allows you to pretend that you have infinite processing power.</p>
+</section>
+
+<section class="slide">
+    <h2>Homoiconicity</h2>
+    <div class="slide">
+        <p>No groaning.  At one time you had to learn what <em>polymorphism</em> meant, too!</p>
+    </div>
+    <div class="slide">
+        <h3><em>homoiconicity</em></h3>
+        <ul>
+            <li><em>homo</em>: from the Greek <em>homo</em>, same</li>
+            <li><em>icon</em>: from the Greek <em>eikon</em>, likeness, image, portrait</li>
+            <li><em>icity</em>: from the Greek <em>icit</em>, extra letters to make things more pretentious</li>
+        </ul>
     </div>
 </section>
 
