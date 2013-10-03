@@ -177,7 +177,16 @@ odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
 
 <section class="slide">
     <h2>Lazy Evaluation</h2>
-    <p><a href="http://stackoverflow.com/questions/265392/why-is-lazy-evaluation-useful">SO Link</a></p>
+    <div class="slide">
+        <p>We'll switch example here, as there's not much call to do lazy evaluation for lottery odds.  We will follow a
+           <a href="http://stackoverflow.com/a/284180/1243641">Haskell example</a> from Chris Eidhof</p>
+        <div><textarea class="code" mode="haskell" style="display: none;" runnable="false">quickSort [] = []
+quickSort (x:xs) = quickSort (filter (< x) xs) ++
+                   [x] ++
+                   quickSort (filter (>= x) xs)
+
+minimum ls = head (quickSort ls)</textarea></div>
+    </div>
 </section>
 
 
