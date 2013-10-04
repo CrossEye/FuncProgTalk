@@ -71,7 +71,8 @@ The central activity in FP is writing new functions
 <section class="slide">
     <h2>Chief difference between OOP and FP</h2>
     <p>Reg Braithwaite has a <a href="http://raganwald.com/2013/04/08/functional-vs-OOP.html">good description</a>
-       of the central difference between these two paradigms:</p>
+       of the central difference between these two paradigms.  OO focuses on the <em>differences</em> in the data,
+       while FP concentrates on <em>consistent data structures</em>.</p>
     <div class="slide">
         <div style="float:left;width:45%;margin-right:3%;clear:both;">
             <h3>Object-Oriented</h3>
@@ -94,17 +95,17 @@ The central activity in FP is writing new functions
             </ul>
         </div>
     </div>
-    <div class="slide" style="clear:both;">So...</div>
 </section>
 
 
 <section class="slide">
     <h2>What does this mean in the business environment?</h2>
-    <p>Is one of these techniques the clear-cut winner in the business world?  Which one?</p>
+    <p>Is one of these techniques the clear-cut winner in the business world?  Is it functional or object-oriented?</p>
     <div class="slide">
         <h3>Are you sure?</h3>
     </div>
     <div class="slide">
+        <br/>
         <h3>How much business logic is written like this?</h3>
         <div>
             <div class="code" mode="plsql" style="display: none;">SELECT orders.order_id, orders.order_date, suppliers.supplier_name
@@ -116,9 +117,45 @@ The central activity in FP is writing new functions
         </div>
         <div class="slide">
             <br/>
-            <p>SQL is very much a functional language.  And it permeates business.</p>
+            <p>SQL is very similar to functional languages, and it permeates business.  It uses a consistent data structure
+               (tables with records organized into columns) and a few basic functions that can be combined into
+               arbitrary queries.  And it shares one other important feature with functional languages: it is
+               <strong>declarative</strong>.</p>
         </div>
     </div>
+</section>
+
+
+<section class="slide">
+    <h2>Declarative vs Imperative Programming</h2>
+    <p>One main distinguishing characteristics of functional programming languages is that they describe <em>what</em>
+        they want done, and not <em>how</em> to do it.  OO, inside its methods, still uses mostly imperative techniques.</p>
+    <!--div>
+        <div class="code" mode="javascript" style="display: none;">var square = function(x) {return x * x};</div>
+    </div-->
+    <div class="slide">
+        <h3>Imperative style</h3>
+        <div>
+            <textarea class="code" mode="javascript" style="display: none;" runnable="true">var sumOfSquares = function(list) {
+    var result = 0;
+    for (var i = 0; i < list.length; i++) {
+        result += square(list[i]);
+    }
+    return result;
+};
+
+console.log(sumOfSquares([2, 3, 5]));</textarea>
+        </div>
+    </div>
+    <div class="slide">
+        <h3>Functional style</h3>
+        <div>
+            <textarea class="code" mode="javascript" style="display: none;" runnable="true">var sumOfSquares = pipe(map(square), reduce(add, 0));
+
+console.log(sumOfSquares([2, 3, 5]));</textarea>
+        </div>
+        <br/>
+        <br/>
 </section>
 
 
@@ -223,23 +260,21 @@ function odds(n, p) {
     <h2>Pattern Matching</h2>
     <p>Some languages make use of an interesting techniqe to define functions: pattern matching.  Rather than use
        <code>if-blocks</code> in the body of the function, parameter-matching is used to choose which of a collection
-        of related functions should be called.  Here we can see it in Haskell.</p>
+        of related functions should be called.  Here we can see it in Erlang.</p>
     <div class="slide">
         <h3>Simple recursive version</h3>
-        <div><div class="code" mode="erlang" style="display: none;">odds(0, _) -> 1;
-
-odds(N, P) -> (N / P) * odds(N - 1, P - 1).</div></div>
+        <div><textarea class="code" mode="erlang" style="display: none;">odds(0, _) -> 1;
+odds(N, P) -> (N / P) * odds(N - 1, P - 1).</textarea></div>
 
     </div>
     <div class="slide">
+        <br/>
         <h3>Tail-call version</h3>
-        <div><div class="code" mode="erlang" style="display: none;">-export([odds/2]).
+        <div><textarea class="code" mode="erlang" style="display: none;">-export([odds/2]).
 
 odds(N, P) -> odds(N, P, 1).
-
 odds(0, _, Acc) -> Acc;
-
-odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</div></div>
+odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
     </div>
 
 </section>
@@ -249,7 +284,7 @@ odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</div></div>
     <p>Many of us are most familiar with languages that evaluate their expressions as soon as they're encountered.  But
        there are some that wait until the last possible instant.  This can have some real benefits.</p>
     <div class="slide">
-        <p>We'll switch example here, as there's not much call to do lazy evaluation for lottery odds.  We will follow a
+        <p>We'll switch examples here, as there's not much call to do lazy evaluation for lottery odds.  We will follow a
            <a href="http://stackoverflow.com/a/284180/1243641">Haskell example</a> from Chris Eidhof</p>
         <div><div class="code" mode="haskell" style="display: none;">quickSort [] = []
 quickSort (x:xs) = quickSort (filter (< x) xs)
@@ -257,7 +292,8 @@ quickSort (x:xs) = quickSort (filter (< x) xs)
                    ++ quickSort (filter (>= x) xs)
 
 minimum ls = head (quickSort ls)</div></div>
-        <p>Note that the right half of quicksort is not calculated in finding the minimum.</p>
+        <br/>
+        <p>Note that the right half of quicksort is not calculated in finding the minimum. (Also note the pattern matching here too!)</p>
     </div>
     <p class="slide">One <a href="http://stackoverflow.com/a/2165370/1243641">very interesting comparison</a> is that
        lazy evaluation is to the CPU what garbage collection is to memory.  The garbage collector allows you to pretend
@@ -265,6 +301,7 @@ minimum ls = head (quickSort ls)</div></div>
     <p class="slide">But there are many reasons to like lazy evaluation.  It allows you to operate on theoretically
        infinite data structures, calculating only those parts you need.  And it allows you to define your own control
        efficient control structures inside the language instead of only at the level of the language syntax.</p>
+    <br/>
 </section>
 
 <section class="slide">
@@ -292,17 +329,30 @@ minimum ls = head (quickSort ls)</div></div>
     </div>
     <div class="slide">
         <br/>
-        <p>But the following is a function definition:</p>
+        <p>But the following, which looks almost identical, is a function definition:</p>
         <div>
             <div class="code" mode="scheme" style="display: none;">(define (square x) (* x x))</div>
         </div>
     </div>
     <div class="slide">
+        <br/>
         <p>LISP-like languages can use this feature to build very powerful domain-specific languages.  Many would
            claim that this is the key feature that has allowed LISP to become the oldest language still in widespread
            use.</p>
     </div>
+</section>
 
+<section class="slide">
+    <h2>Functional Programming in Javascript</h2>
+    <p>With first-class function, closures, and anonymous functions, Javascript allows us to do a great deal of
+        functional programming, even if we don't have things like pattern matching and homoiconicity.  There are
+        some tools built in to modern Javascript environments, and it's straightforward to roll your own.</p>
+    <p>For the remainder of this talk, we will use the <a href="https://github.com/CrossEye/ramda">Ramda</a> library that
+        <a href="https://github.com/buzzdecafe">Michael Hurley</a> and I have been developing.  But there are a number
+        of interesting alternatives available:</p>
+    <ul>
+        <li class="slide"></li>
+    </ul>
 </section>
 
 
@@ -341,9 +391,17 @@ minimum ls = head (quickSort ls)</div></div>
 <script src="extensions/codemirror/mode/scheme/scheme.js"></script>
 <script src="extensions/codemirror/mode/plsql/plsql.js"></script>
 <script src="extensions/codemirror/deck.codemirror.js"></script>
+<script src="ramda.js"></script>
 
 <script>
+    ramda.installTo(this);
+    var globals = sort(function(a, b) {return a < b ? - 1 : a > b ? +1 : 0}, keys(ramda)).join(",");
+    var square = function(x) {return x * x};
+    globals += ",square";
 	$(function() {
+        $("textarea.code").each(function(idx, textarea) {
+            $(textarea).attr("globals", globals);
+        });
 		$.deck('.slide');
 	});
 </script>
