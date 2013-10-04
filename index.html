@@ -59,14 +59,78 @@
     </div>
 </section>
 
+<!--
+The central tenet of FP is that data is only loosely coupled to functions. You can write different operations on the
+same data structure, and the central model for abstraction is the function, not the data structure. Functions hide their
+implementation, and the language’s abstractions speak to functions and they way they are combined or expressed, such as
+generic functions or combinators.
+
+The central activity in FP is writing new functions
+-->
+
 <section class="slide">
-    <h2>Easily available in Javascript</h2>
+    <h2>Chief difference between OOP and FP</h2>
+    <p>Reg Braithwaite has a <a href="http://raganwald.com/2013/04/08/functional-vs-OOP.html">good description</a>
+       of the central difference between these two paradigms:</p>
+    <div class="slide">
+        <div style="float:left;width:45%;margin-right:3%;clear:both;">
+            <h3>Object-Oriented</h3>
+            <ul>
+                <li>Data and the operations upon it are tightly coupled</li>
+                <li>Objects hide their implementation of operations from other objects via their interfaces</li>
+                <li>The central model for abstraction is the data itself</li>
+                <li>The central activity is composing new objects and extending existing objects by adding new methods
+                    to them</li>
+            </ul>
+        </div>
+        <div class="slide" style="float:left;width:45%;margin-right:3%;">
+            <h3>Functional</h3>
+            <ul>
+                <li>Data is only loosely coupled to functions</li>
+                <li>Functions hide their implementation, and the language’s abstractions speak to functions and the way
+                    they are combined or expressed</li>
+                <li>The central model for abstraction is the function, not the data structure.</li>
+                <li>The central activity is writing new functions</li>
+            </ul>
+        </div>
+    </div>
+    <div class="slide" style="clear:both;">So...</div>
+</section>
+
+
+<section class="slide">
+    <h2>What does this mean in the business environment?</h2>
+    <p>Is one of these techniques the clear-cut winner in the business world?  Which one?</p>
+    <div class="slide">
+        <h3>Are you sure?</h3>
+    </div>
+    <div class="slide">
+        <h3>How much business logic is written like this?</h3>
+        <div>
+            <div class="code" mode="plsql" style="display: none;">SELECT orders.order_id, orders.order_date, suppliers.supplier_name
+    FROM suppliers
+    RIGHT OUTER JOIN orders
+    ON suppliers.supplier_id = orders.supplier_id
+    WHERE orders.order_status = 'INCOMPLETE'
+    ORDER BY orders.order_date DESC;</div>
+        </div>
+        <div class="slide">
+            <br/>
+            <p>SQL is very much a functional language.  And it permeates business.</p>
+        </div>
+    </div>
+</section>
+
+
+<section class="slide">
+    <h2>Functional Features in Javascript</h2>
+    <h3>Easily available in Javascript</h3>
     <ul>
         <li class="slide">First-class functions</li>
         <li class="slide">Lambdas/Anonymous Functions with closures</li>
         <li class="slide">Compact, even terse, functions</li>
     </ul>
-    <h2 class="slide">Possible to accomplish in Javascript with some care</h2>
+    <h3 class="slide">Possible to accomplish in Javascript with some care</h3>
     <ul>
         <li class="slide">Mostly stateless processing</li>
         <li class="slide">Side-effect-free function calls</li>
@@ -120,7 +184,8 @@ function odds(n, p) {
     <div class="slide">
         <br/>
         <p>There are many reasons that functional programmers prefer recursion, but one very simple one is that
-           recursive functions are often much more elegant than their iterative cousins.</p>
+           recursive functions are often much more elegant than their iterative cousins.  It's easier to reason
+           about them.</p>
     </div>
     <div class="slide">
         <p>Unfortunately, they often don't perform as well.  All the overhead of creating stack contexts for
@@ -157,20 +222,24 @@ function odds(n, p) {
 <section class="slide">
     <h2>Pattern Matching</h2>
     <p>Some languages make use of an interesting techniqe to define functions: pattern matching.  Rather than use
-       <code>if-blocks</code> in the body of the function, parameters are matched to simpler functions.</p>
+       <code>if-blocks</code> in the body of the function, parameter-matching is used to choose which of a collection
+        of related functions should be called.  Here we can see it in Haskell.</p>
     <div class="slide">
         <h3>Simple recursive version</h3>
-        <div><textarea class="code" mode="erlang" style="display: none;" runnable="false">odds(0, _) -> 1;
-odds(N, P) -> (N / P) * odds(N - 1, P - 1).</textarea></div>
+        <div><div class="code" mode="erlang" style="display: none;">odds(0, _) -> 1;
+
+odds(N, P) -> (N / P) * odds(N - 1, P - 1).</div></div>
 
     </div>
     <div class="slide">
         <h3>Tail-call version</h3>
-        <div><textarea class="code" mode="erlang" style="display: none;" runnable="false">-export([odds/2]).
+        <div><div class="code" mode="erlang" style="display: none;">-export([odds/2]).
 
 odds(N, P) -> odds(N, P, 1).
+
 odds(0, _, Acc) -> Acc;
-odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
+
+odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</div></div>
     </div>
 
 </section>
@@ -182,17 +251,20 @@ odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
     <div class="slide">
         <p>We'll switch example here, as there's not much call to do lazy evaluation for lottery odds.  We will follow a
            <a href="http://stackoverflow.com/a/284180/1243641">Haskell example</a> from Chris Eidhof</p>
-        <div><textarea class="code" mode="haskell" style="display: none;" runnable="false">quickSort [] = []
+        <div><div class="code" mode="haskell" style="display: none;">quickSort [] = []
 quickSort (x:xs) = quickSort (filter (< x) xs)
                    ++ [x]
                    ++ quickSort (filter (>= x) xs)
 
-minimum ls = head (quickSort ls)</textarea></div>
+minimum ls = head (quickSort ls)</div></div>
         <p>Note that the right half of quicksort is not calculated in finding the minimum.</p>
     </div>
     <p class="slide">One <a href="http://stackoverflow.com/a/2165370/1243641">very interesting comparison</a> is that
        lazy evaluation is to the CPU what garbage collection is to memory.  The garbage collector allows you to pretend
        that you have infinite memory; lazy evaluation allows you to pretend that you have infinite processing power.</p>
+    <p class="slide">But there are many reasons to like lazy evaluation.  It allows you to operate on theoretically
+       infinite data structures, calculating only those parts you need.  And it allows you to define your own control
+       efficient control structures inside the language instead of only at the level of the language syntax.</p>
 </section>
 
 <section class="slide">
@@ -205,9 +277,32 @@ minimum ls = head (quickSort ls)</textarea></div>
         <ul>
             <li><em>homo</em>: from the Greek <em>homo</em>, same</li>
             <li><em>icon</em>: from the Greek <em>eikon</em>, likeness, image, portrait</li>
-            <li><em>icity</em>: from the Greek <em>icit</em>, extra letters to make things more pretentious</li>
+            <li><em>icity</em>: from the Greek <em>icit</em>, extra letters to make words more pretentious</li>
         </ul>
     </div>
+</section>
+
+<section class="slide">
+    <h2>Homoiconicity in LISP-like languages</h2>
+    <p>Homoiconicity has to do with the fact that in some languages, programs are written in a format easily
+       interpreted also as a data structure.  In Scheme, the following is just a quoted list of three items,
+       <code>define</code>, <code>(square x)</code> (itself a list), and <code>(* x x)</code> (another list)</p>
+    <div>
+        <div class="code" mode="scheme" style="display: none;">'(define (square x) (* x x))</div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>But the following is a function definition:</p>
+        <div>
+            <div class="code" mode="scheme" style="display: none;">(define (square x) (* x x))</div>
+        </div>
+    </div>
+    <div class="slide">
+        <p>LISP-like languages can use this feature to build very powerful domain-specific languages.  Many would
+           claim that this is the key feature that has allowed LISP to become the oldest language still in widespread
+           use.</p>
+    </div>
+
 </section>
 
 
@@ -242,6 +337,9 @@ minimum ls = head (quickSort ls)</textarea></div>
 <script src="extensions/codemirror/codemirror.js"></script>
 <script src="extensions/codemirror/mode/javascript/javascript.js"></script>
 <script src="extensions/codemirror/mode/erlang/erlang.js"></script>
+<script src="extensions/codemirror/mode/haskell/haskell.js"></script>
+<script src="extensions/codemirror/mode/scheme/scheme.js"></script>
+<script src="extensions/codemirror/mode/plsql/plsql.js"></script>
 <script src="extensions/codemirror/deck.codemirror.js"></script>
 
 <script>
