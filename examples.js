@@ -1,16 +1,16 @@
-var propMatches = useWith(pipe, prop, eq);
+var propMatches = execute(pipe).upon(prop, eq);
 
-var getIncompleteTaskSummariesForUser = function(userName) {
+var getIncompleteTaskSummariesForMemberFunctional = function(memberName) {
     return fetchData()
         .then(prop('tasks'))
-        .then(remove(propMatches('complete', true)))
-        .then(filter(propMatches('user', userName)))
-        .then(pluck(['id', 'dueDate', 'title', 'priority']))
-        .then(orderBy('dueDate'));
+        .then(reject(propMatches('complete', true)))
+        .then(filter(propMatches('member', memberName)))
+        .then(map(pick(['id', 'dueDate', 'title', 'priority'])))
+        .then(sortBy(prop('dueDate')));
 };
 
 
-var getIncompleteTaskSummariesForUser = function(userName) {
+var getIncompleteTaskSummariesForMemberImperative = function(memberName) {
     return fetchData()
         .then(function(data) {
             return data.tasks;
@@ -27,7 +27,7 @@ var getIncompleteTaskSummariesForUser = function(userName) {
         .then(function(tasks) {
             var results = [];
             for (var i = 0, len = tasks.length; i < len; i++) {
-                if (tasks[i].user === userName) {
+                if (tasks[i].member === memberName) {
                     results.push(tasks[i]);
                 }
             }
@@ -53,25 +53,64 @@ var getIncompleteTaskSummariesForUser = function(userName) {
             return tasks;
         });
 };
-/*
 
-I was just thinking about the API for useWith and wondering if there might not be more obvious alternatives than this:
+var TaskList = (function() {
+    var TaskList = function(tasks) {
+        this.tasks = tasks;
+    };
+    TaskList.prototype.chooseByComplettion = function(completion) {
+        var results = [];
+        for (var i = 0, len = this.tasks.length; i < len; i++) {
+            if (this.tasks[i].complete == completion) {
+                results.push(this.tasks[i]);
+            }
+        }
+        this.tasks = results;
+    };
+    TaskList.prototype.chooseByMember = function(memberName) {
+        var results = [];
+        for (var i = 0, len = this.tasks.length; i < len; i++) {
+            if (this.tasks[i].member === memberName) {
+                results.push(this.tasks[i]);
+            }
+        }
+        this.tasks = results;
+    };
+    TaskList.prototype.getSummaries = function() {
+        var results = [], task;
+        for (var i = 0, len = this.tasks.length; i < len; i++) {
+            task = this.tasks[i];
+            results.push({
+                id: task.id,
+                dueDate: task.dueDate,
+                title: task.title,
+                priority: task.priority
+            })
+        }
+        return new TaskList(results);
+    };
 
-    var project = useWith(map, pickAll, identity);
-    var propMatches = useWith(pipe, prop, eq);
+    TaskList.Sorter = function(propName) {
+        this.propName = propName;
+    };
+    TaskList.Sorter.prototype.sort = function(taskList) {
+        var propName = this.propName;
+        taskList.tasks.sort(function(first, second) {
+            return first[propName] < second[propName] ? -1 : first[propName] > second[propName] ? +1 : 0;
+        })
+    }
 
-This might be cleaner:
+    return TaskList;
 
-    var project = useWith(map)(pickAll, identity);
-    var propMatches = useWith(pipe)(prop, eq);
-
-But this might be even more obvious:
-
-    var project = use(map).with(pickAll, identity);
-    var propMatches = use(pipe).with(prop, eq);
-
-There are those who wouldn't like that last one in a functional library, as it sounds a little like OO, but I'm not worried by those kinds of concerns.
-
-What do you think?
-
-*/
+}());
+var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
+    return fetchData()
+        .then(function(data) {
+            var taskList = new TaskList(data.tasks);
+            taskList.chooseByCompletion(false);
+            taskList.chooseByMember(memberName);
+            var newTaskList = taskList.getSummaries();
+            new TaskList.Sorter("dueDate").sort(newTaskList);
+            return newTaskList.tasks;
+        });
+};

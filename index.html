@@ -351,9 +351,51 @@ minimum ls = head (quickSort ls)</div></div>
         <a href="https://github.com/buzzdecafe">Michael Hurley</a> and I have been developing.  But there are a number
         of interesting alternatives available:</p>
     <ul>
-        <li class="slide"></li>
+        <li class="slide"><a href="https://github.com/raganwald/allong.es">allong.es</a> is a fairly new functional
+            combinators and decorators library</li>
+        <li class="slide"><a href="https://github.com/fogus/lemonad">Lemonad</a> is a general-purpose functional
+            programming library</li>
+        <li class="slide"><a href="https://github.com/dtao/lazy.js">Lazy</a> and
+            <a href="https://github.com/goatslacker/lz">Lz</a> are libraries for lazy list processing</li>
+        <li class="slide"><a href="http://underscorejs.org/">Underscore</a> and its more performant clone,
+            <a href="http://lodash.com/">Lo-Dash</a>, are general utility libraries with a number of functional
+            capabilities</li>
+        <li class="slide"><a href="http://osteele.com/sources/javascript/functional/">Functional Javascript</a>,
+            although perhaps outdated today, was the very first successful functional programming library for
+            Javascript</li>
     </ul>
 </section>
+
+<section class="slide">
+    <h2>Using Functional Techniques in Javacript</h2>
+    <p>We will approach functional programming by converting an imperative example into a functional one.</p>
+    <p>We will also briefly examine an object-oriented approach, but we'll see that the code that we would like
+        to address is very similar to the imperative one, just organized differently.</p>
+    <p>Our example will be a Task List application, fetching something like the following data from the server:</p>
+    <div><div class="code" mode="javascript" style="display: none;">var data = {
+    result: "SUCCESS",
+    interfaceVersion: "1.0.3",
+    requested: "10/17/2013 15:31:20".
+    lastUpdated: "10/16/2013 10:52:39",
+    tasks: [
+        {id: 104, complete: false, priority: "high",           dueDate: "11/29/2013",
+                  member: "Scott", title: "Do something",      created: "9/22/2013"},
+        {id: 105, complete: false, priority: "medium",         dueDate: "11/22/2013",
+                  member: "Lena",  title: "Do something else", created: "9/22/2013"},
+        {id: 107, complete: true,  priority: "high",           dueDate: "11/22/2013",
+                  member: "Mike",  title: "Fix the foo",       created: "9/22/2013"},
+        {id: 108, complete: false, priority: "low",            dueDate: "11/15/2013",
+                  member: "Punam", title: "Adjust the bar",    created: "9/25/2013"},
+        {id: 110, complete: false, priority: "medium",         dueDate: "11/15/2013",
+                  member: "Scott", title: "Rename everything", created: "10/2/2013"},
+        {id: 112, complete: true,  priority: "high",           dueDate: "11/27/2013",
+                  member: "Lena",  title: "Alter all quuxes",  created: "10/5/2013"}
+        // , {id: /* ... */ }
+    ]
+};</div></div>
+    <br/>
+</section>
+
 
 
 <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
