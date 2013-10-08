@@ -27,10 +27,14 @@
 </head>
 <body class="deck-container">
 
+
+
 <section class="slide">
 	<h1>Functional Programming</h1>
     <h2>Scott Sauyet</h2>
 </section>
+
+
 
 <section class="slide">
 	<h2>An Overview of Functional Techniques<br/>
@@ -44,6 +48,8 @@
         <li>Interaction of Functional and Object-Oriented Styles</li>
     </ul>
 </section>
+
+
 
 <section class="slide">
 	<h2>What is Functional Programming?</h2>
@@ -59,14 +65,7 @@
     </div>
 </section>
 
-<!--
-The central tenet of FP is that data is only loosely coupled to functions. You can write different operations on the
-same data structure, and the central model for abstraction is the function, not the data structure. Functions hide their
-implementation, and the language’s abstractions speak to functions and they way they are combined or expressed, such as
-generic functions or combinators.
 
-The central activity in FP is writing new functions
--->
 
 <section class="slide">
     <h2>Chief difference between OOP and FP</h2>
@@ -98,6 +97,7 @@ The central activity in FP is writing new functions
 </section>
 
 
+
 <section class="slide">
     <h2>What does this mean in the business environment?</h2>
     <p>Is one of these techniques the clear-cut winner in the business world?  Is it functional or object-oriented?</p>
@@ -124,6 +124,7 @@ The central activity in FP is writing new functions
         </div>
     </div>
 </section>
+
 
 
 <section class="slide">
@@ -156,7 +157,9 @@ console.log(sumOfSquares([2, 3, 5]));</textarea>
         </div>
         <br/>
         <br/>
+    </div>
 </section>
+
 
 
 <section class="slide">
@@ -174,6 +177,8 @@ console.log(sumOfSquares([2, 3, 5]));</textarea>
     </ul>
 </section>
 
+
+
 <section class="slide">
     <h2>Not available in current versions Javascript</h2>
     <ul>
@@ -188,6 +193,8 @@ console.log(sumOfSquares([2, 3, 5]));</textarea>
            our focus to those things we can actually accomplish in Javascript.</p>
     </div>
 </section>
+
+
 
 <section class="slide">
     <h2>Shared Example</h2>
@@ -209,6 +216,8 @@ console.log(odds(3, 10)); //=> (3/10) * (2/9) * (1/8) => (1/120) => 0.008333...<
     <br/>
 </section>
 
+
+
 <section class="slide">
     <h2>Recursive Version</h2>
     <p>This is similar, but written recursively:</p>
@@ -229,6 +238,8 @@ function odds(n, p) {
            function calls tends to add up.  But certain kinds of recursive calls <em>can</em> be easily optimized.</p>
     </div>
 </section>
+
+
 
 <section class="slide">
     <h2>This code in tail-call formulation:</h2>
@@ -256,6 +267,8 @@ function odds(n, p) {
     </div>
 </section>
 
+
+
 <section class="slide">
     <h2>Pattern Matching</h2>
     <p>Some languages make use of an interesting techniqe to define functions: pattern matching.  Rather than use
@@ -279,6 +292,8 @@ odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
 
 </section>
 
+
+
 <section class="slide">
     <h2>Lazy Evaluation</h2>
     <p>Many of us are most familiar with languages that evaluate their expressions as soon as they're encountered.  But
@@ -286,12 +301,12 @@ odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
     <div class="slide">
         <p>We'll switch examples here, as there's not much call to do lazy evaluation for lottery odds.  We will follow a
            <a href="http://stackoverflow.com/a/284180/1243641">Haskell example</a> from Chris Eidhof</p>
-        <div><div class="code" mode="haskell" style="display: none;">quickSort [] = []
+        <div><textarea class="code" mode="haskell" style="display: none;">quickSort [] = []
 quickSort (x:xs) = quickSort (filter (< x) xs)
                    ++ [x]
                    ++ quickSort (filter (>= x) xs)
 
-minimum ls = head (quickSort ls)</div></div>
+minimum ls = head (quickSort ls)</textarea></div>
         <br/>
         <p>Note that the right half of quicksort is not calculated in finding the minimum. (Also note the pattern matching here too!)</p>
     </div>
@@ -303,6 +318,8 @@ minimum ls = head (quickSort ls)</div></div>
        efficient control structures inside the language instead of only at the level of the language syntax.</p>
     <br/>
 </section>
+
+
 
 <section class="slide">
     <h2>Homoiconicity</h2>
@@ -318,6 +335,8 @@ minimum ls = head (quickSort ls)</div></div>
         </ul>
     </div>
 </section>
+
+
 
 <section class="slide">
     <h2>Homoiconicity in LISP-like languages</h2>
@@ -341,6 +360,8 @@ minimum ls = head (quickSort ls)</div></div>
            use.</p>
     </div>
 </section>
+
+
 
 <section class="slide">
     <h2>Functional Programming in Javascript</h2>
@@ -366,13 +387,15 @@ minimum ls = head (quickSort ls)</div></div>
     </ul>
 </section>
 
+
+
 <section class="slide">
     <h2>Using Functional Techniques in Javacript</h2>
     <p>We will approach functional programming by converting an imperative example into a functional one.</p>
     <p>We will also briefly examine an object-oriented approach, but we'll see that the code that we would like
         to address is very similar to the imperative one, just organized differently.</p>
     <p>Our example will be a Task List application, fetching something like the following data from the server:</p>
-    <div><div class="code" mode="javascript" style="display: none;">var data = {
+    <div><textarea class="code" mode="javascript" style="display: none;">var data = {
     result: "SUCCESS",
     interfaceVersion: "1.0.3",
     requested: "10/17/2013 15:31:20".
@@ -390,11 +413,236 @@ minimum ls = head (quickSort ls)</div></div>
                   member: "Scott", title: "Rename everything", created: "10/2/2013"},
         {id: 112, complete: true,  priority: "high",           dueDate: "11/27/2013",
                   member: "Lena",  title: "Alter all quuxes",  created: "10/5/2013"}
-        // , {id: /* ... */ }
+        // , ...
     ]
-};</div></div>
+};</textarea></div>
     <br/>
 </section>
+
+
+
+<section class="slide">
+    <h2>Our Goal</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">tasks: [
+    {id: 104, complete: false, priority: "high",           dueDate: "11/29/2013",
+              member: "Scott", title: "Do something",      created: "9/22/2013"},
+    {id: 105, complete: false, priority: "medium",         dueDate: "11/22/2013",
+              member: "Lena",  title: "Do something else", created: "9/22/2013"},
+    // , ...
+]</textarea></div>
+    <br/>
+    <p>The goal will be a function that accepts a `member` parameter, then fetches the data from the server (or from
+        some application cache), chooses the tasks for that member that are not complete, returns their ids, priorities,
+        titles, and dues dates, sorted by due date.</p>
+    <p>Since the fetch from the server will likely be asynchronous, we'll hook everything together with promises, and
+        our function will return a promise that should resolve to an array of objects with the required properties.</p>
+    <p>For our illustrative purposes, we will ignore all error-checking concerns.  Obviously in a production system,
+        we would need to consider server-side failures, and bad data scenarios.</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Sample Imperative Approach</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var getIncompleteTaskSummariesForMember_imperative = function(memberName) {
+    return fetchData()
+        .then(function(data) {
+            return data.tasks;
+        })
+        .then(function(tasks) {
+            var results = [];
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                if (!tasks[i].complete) {
+                    results.push(tasks[i]);
+                }
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            var results = [];
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                if (tasks[i].member === memberName) {
+                    results.push(tasks[i]);
+                }
+            }
+            return results;
+        })</textarea></div>
+    <br/>
+    <p>(continued on the next slide.)</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Sample Imperative Approach (continued)</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">
+        .then(function(tasks) {
+            var results = [], task;
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                task = tasks[i];
+                results.push({
+                    id: task.id,
+                    dueDate: task.dueDate,
+                    title: task.title,
+                    priority: task.priority
+                })
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            tasks.sort(function(first, second) {
+                return first.dueDate - second.dueDate;
+            });
+            return tasks;
+        });
+};</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Similar Object-Oriented Approach</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;"> // main method
+var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
+    return fetchData()
+        .then(function(data) {
+            var taskList = new TaskList(data.tasks);
+            taskList.chooseByCompletion(false);
+            taskList.chooseByMember(memberName);
+            var newTaskList = taskList.getSummaries();
+            newTaskList.sort(new TaskList.Sorter("dueDate"));
+            return newTaskList.tasks;
+        });
+};</textarea></div>
+    <br/>
+    <p>(continued on the next slide.)</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Object-Oriented Approach (continued)</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var TaskList = (function() {
+    var TaskList = function(/*Task[]*/ tasks) {
+        this.tasks = tasks;
+    };
+    TaskList.prototype.chooseByCompletion = function(completion) {
+        var results = [];
+        for (var i = 0, len = this.tasks.length; i < len; i++) {
+            if (this.tasks[i].complete == completion) {
+                results.push(this.tasks[i]);
+            }
+        }
+        this.tasks = results;
+    };
+    TaskList.prototype.chooseByMember = function(memberName) {
+        var results = [];
+        for (var i = 0, len = this.tasks.length; i < len; i++) {
+            if (this.tasks[i].member === memberName) {
+                results.push(this.tasks[i]);
+            }
+        }
+        this.tasks = results;
+    };</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Object-Oriented Approach (continued)</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">TaskList.prototype.getSummaries = function() {
+        var results = [], task;
+        for (var i = 0, len = this.tasks.length; i < len; i++) {
+            task = this.tasks[i];
+            results.push({
+                id: task.id,
+                dueDate: task.dueDate,
+                title: task.title,
+                priority: task.priority
+            })
+        }
+        return new TaskList(results);
+    };
+
+    TaskList.prototype.sort = function(/*TaskListSorter*/ sorter) {
+        this.tasks.sort(sorter.getSortFunction());
+    };
+
+    return TaskList;
+}());</textarea></div>
+    <br/>
+    <p>(continued on the next slide.)</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Object-Oriented Approach (continued)</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var TaskListSorter = (function()  {
+    var TaskListSorter = function(propName) {
+        this.propName = propName;
+    };
+    TaskListSorter.prototype.getSortFunction = function() {
+        var propName = this.propName;
+        return function(first, second) {
+            return first[propName] < second[propName] ? -1 :
+                   first[propName] > second[propName] ? +1 : 0;
+        }
+    };
+
+    return TaskListSorter;
+}());</textarea></div>
+    <br/>
+    <p>We could continue by defining <code>Task</code> and <code>MinimalTask</code>, but that's probably overkill in
+        Javascript.</p>
+    <p class="slide">It's important for our point to note that the difference between the plain imperative code and the
+        Object-Oriented code, outside a number of `<code>this</code>` keywords, is mostly just organization.  The
+        contents of the functions are much the same; it's the way they are organized that varies.</p>
+    <p class="slide">This means that for our purposes, we can focus on the slightly simpler imperative code.</p>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Converting to Functional Code</h2>
+    <p>The process for the remainder of this talk will be to convert this code into concise, readable, functional
+        code, one block at a time, explaining some of the basic building blocks of functional programming as we go.
+        First up is this little function:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(function(data) {
+    return data.tasks;
+})</textarea></div>
+    <br/>
+    <div class="slide">
+        <h3>Functional Version</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(get('tasks'))</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>So the obvious question, then, is, what is the <code>get</code> function?</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>The <code>get</code> Function</h2>
+    <p>This is the definition of the <code>get</code> function in the Ramda library:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var get = curry(function(prop, obj) {return obj[prop];});</textarea></div>
+    <br/>
+    <div class="slide">
+        <p>Ignoring the <code>curry</code> wrapper, this is pretty simple.  <code>get</code> (which also goes by the
+            alias of <code>prop</code>) is a function which accepts a property name and an object, and returns the
+            property of the object with that name.</p>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>Our <code>then</code> call needs a function, so <code>curry</code> must be doing something interesting with
+            this function, which should return an object propery, to instead returning a new function.  So we need to
+            take a detour to discuss <code>curry</code> a bit.</p>
+    </div>
+</section>
+
 
 
 

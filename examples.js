@@ -1,8 +1,8 @@
-var propMatches = execute(pipe).upon(prop, eq);
+var propMatches = use(pipe).over(prop, eq);
 
 var getIncompleteTaskSummariesForMemberFunctional = function(memberName) {
     return fetchData()
-        .then(prop('tasks'))
+        .then(get('tasks'))
         .then(reject(propMatches('complete', true)))
         .then(filter(propMatches('member', memberName)))
         .then(map(pick(['id', 'dueDate', 'title', 'priority'])))
@@ -55,10 +55,10 @@ var getIncompleteTaskSummariesForMemberImperative = function(memberName) {
 };
 
 var TaskList = (function() {
-    var TaskList = function(tasks) {
+    var TaskList = function(/*Task[]*/ tasks) {
         this.tasks = tasks;
     };
-    TaskList.prototype.chooseByComplettion = function(completion) {
+    TaskList.prototype.chooseByCompletion = function(completion) {
         var results = [];
         for (var i = 0, len = this.tasks.length; i < len; i++) {
             if (this.tasks[i].complete == completion) {
@@ -90,19 +90,27 @@ var TaskList = (function() {
         return new TaskList(results);
     };
 
-    TaskList.Sorter = function(propName) {
-        this.propName = propName;
+    TaskList.prototype.sort = function(/*TaskListSorter*/ sorter) {
+        this.tasks.sort(sorter.getSortFunction());
     };
-    TaskList.Sorter.prototype.sort = function(taskList) {
-        var propName = this.propName;
-        taskList.tasks.sort(function(first, second) {
-            return first[propName] < second[propName] ? -1 : first[propName] > second[propName] ? +1 : 0;
-        })
-    }
 
     return TaskList;
-
 }());
+
+var TaskListSorter = (function()  {
+    var TaskListSorter = function(propName) {
+        this.propName = propName;
+    };
+    TaskListSorter.prototype.getSortFunction = function() {
+        var propName = this.propName;
+        return function(first, second) {
+            return first[propName] < second[propName] ? -1 : first[propName] > second[propName] ? +1 : 0;
+        }
+    };
+
+    return TaskListSorter;
+}());
+
 var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
     return fetchData()
         .then(function(data) {
@@ -110,7 +118,7 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
             taskList.chooseByCompletion(false);
             taskList.chooseByMember(memberName);
             var newTaskList = taskList.getSummaries();
-            new TaskList.Sorter("dueDate").sort(newTaskList);
+            newTaskList.sort(new TaskListSorter("dueDate"));
             return newTaskList.tasks;
         });
 };
