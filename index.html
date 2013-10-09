@@ -709,7 +709,7 @@ formatName("James", "Earl", "Jones"); //=> "James Earl Jones"</textarea></div>
         <br/>
         <p>Now that we understand <code>curry</code>, we can see that a manually curried version of this function might
             look like this:</p>
-        <div><textarea class="code" mode="javascript" style="display: none;">var get = function(prop, obj) {
+        <div><textarea class="code" mode="javascript" style="display: none;">var get = function(prop) {
     return function(obj) {
         return obj[prop];
     };
