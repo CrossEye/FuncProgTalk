@@ -645,7 +645,84 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
 
 
 
+<section class="slide">
+    <h2>Curry</h2>
+    <img src="img/curry.png"/>
+    <div class="slide">
+        <br/>
+        <h3>Very sorry, no delicious spicy food here.</h3>
+    </div>
+</section>
 
+
+
+
+<section class="slide">
+    <h2>Currying Functions</h2>
+    <p>Currying is the process of converting functions that take multiple arguments into ones that, when supplied
+        fewer arguments, return new functions that accept the remaining ones.</p>
+    <div class="slide">
+        <div><textarea class="code" mode="javascript" style="display: none;" runnable="true">var add = curry(function(a, b) {return a + b;});
+
+var add42 = add(42);
+
+console.log(add42(10)); //=> 52
+console.log(add42(7)); // 49</textarea></div>
+    </div>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Currying multiple arguments</h2>
+    <p>Different version of currying work slightly differently.  In Ramda, you can pass any of the arguments at any
+        time to a curried function.  If the total arguments passed have not yet reached the required number, then
+        you will get back a new function.  If you reach (or exceed) that number, you will get back the final result.</p>
+    <div><textarea class="code" mode="javascript" style="display: none;" runnable="true">var formatName = curry(function(first, middle, last) {
+    return first + " " + middle + " " + last;
+});
+
+var f = formatName("James"); // returns a function
+var g = f("Earl"); // returns a function
+g("Jones"); //=> "James Earl Jones"
+var h = formatName("James", "Earl"); // returns a function
+h("Jones"); //=> "James Earl Jones"
+// Note that g and h are equivalent functions
+formatName("James", "Earl", "Jones"); //=> "James Earl Jones"</textarea></div>
+    <div>
+        <br/>
+        <p>Some insist that this is not truly currying, but should be called <code>partial application</code>.  They
+            can feel free to call it what they like.  It serves the same role as currying does in a more strongly
+            typed language.</p>
+    </div>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Back to <code>get</code></h2>
+    <p>Remember the definition of <code>get</code>:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var get = curry(function(prop, obj) {return obj[prop];});</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>Now that we understand <code>curry</code>, we can see that a manually curried version of this function might
+            look like this:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">var get = function(prop, obj) {
+    return function(obj) {
+        return obj[prop];
+    };
+};</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>And that means that our new <code>get('tasks')</code> is equivalent to</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">function(obj) {
+    return obj['tasks'];
+};</textarea></div>
+    </div>
+</section>
 <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
 <a href="#" class="deck-next-link" title="Next">&#8594;</a>
 
