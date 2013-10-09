@@ -452,7 +452,7 @@ minimum ls = head (quickSort ls)</textarea></div>
         .then(function(tasks) {
             var results = [];
             for (var i = 0, len = tasks.length; i < len; i++) {
-                if (!tasks[i].complete) {
+                if (tasks[i].member == memberName) {
                     results.push(tasks[i]);
                 }
             }
@@ -461,7 +461,7 @@ minimum ls = head (quickSort ls)</textarea></div>
         .then(function(tasks) {
             var results = [];
             for (var i = 0, len = tasks.length; i < len; i++) {
-                if (tasks[i].member === memberName) {
+                if (!tasks[i].complete) {
                     results.push(tasks[i]);
                 }
             }
@@ -507,8 +507,8 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
     return fetchData()
         .then(function(data) {
             var taskList = new TaskList(data.tasks);
-            taskList.chooseByCompletion(false);
             taskList.chooseByMember(memberName);
+            taskList.chooseByCompletion(false);
             var newTaskList = taskList.getSummaries();
             newTaskList.sort(new TaskList.Sorter("dueDate"));
             return newTaskList.tasks;
@@ -526,19 +526,19 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
     var TaskList = function(/*Task[]*/ tasks) {
         this.tasks = tasks;
     };
-    TaskList.prototype.chooseByCompletion = function(completion) {
+    TaskList.prototype.chooseByMember = function(memberName) {
         var results = [];
         for (var i = 0, len = this.tasks.length; i < len; i++) {
-            if (this.tasks[i].complete == completion) {
+            if (this.tasks[i].member === memberName) {
                 results.push(this.tasks[i]);
             }
         }
         this.tasks = results;
     };
-    TaskList.prototype.chooseByMember = function(memberName) {
+    TaskList.prototype.chooseByCompletion = function(completion) {
         var results = [];
         for (var i = 0, len = this.tasks.length; i < len; i++) {
-            if (this.tasks[i].member === memberName) {
+            if (this.tasks[i].complete == completion) {
                 results.push(this.tasks[i]);
             }
         }
@@ -723,6 +723,96 @@ formatName("James", "Earl", "Jones"); //=> "James Earl Jones"</textarea></div>
 }</textarea></div>
     </div>
 </section>
+
+
+
+<section class="slide">
+    <h2>Filtering</h2>
+    <p>So far, we've been able to replace this block:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(function(data) {
+    return data.tasks;
+})</textarea></div>
+    <br/>
+    <p>with this one:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(get('tasks'))</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>The next block to replace looks like this:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    var results = [];
+    for (var i = 0, len = tasks.length; i < len; i++) {
+        if (tasks[i].member == memberName) {
+            results.push(tasks[i]);
+        }
+    }
+    return results;
+})</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>What we're doing is running a filter on the input list, keeping only those that have the correct
+            <code>member</code> property.  Let's see how we would do this in a functional paradigm.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Functional Filtering</h2>
+    <p>Many functional libraries come with a <code>filter</code> function, which accepts a predicate function and
+        a list, and returns a new list consisting of those elements of the original list for which the predicate
+        function returns <code>true</code>.</p>
+    <p>Ramda has one, called <code>filter</code>, and like pretty much every function of more than one parameter, it's
+        curried, with the signature, <code>filter(predicate, list)</code>.</p>
+    <p>Remembering that the <code>then</code> block will pass the list of tasks to us, we really want to call filter
+        with a predicate, getting back a curried function that will accept a list.</p>
+    <div class = slide>
+        <p>Here's a first pass:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(filter(function(task) {
+    return task.member == memberName;
+})</textarea></div>
+        <br/>
+        <p>(Remember that <code>memberName</code> was a parameter to our original function.)</p>
+    </div>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Focused Code</h2>
+    <p>So, for one thing, we've reduced the weight of our custom code:</p>
+    <div class="slide">
+        <h3>Original code</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    var results = [];
+    for (var i = 0, len = tasks.length; i < len; i++) {
+        if (tasks[i].member == memberName) {
+            results.push(tasks[i]);
+        }
+    }
+    return results;
+})</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <h3>Functional version</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(filter(function(task) {
+    return task.member == memberName;
+})</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>But we've done something more important too:  We've moved the focus from iteration and updating the state
+            of a local collection to the real point of this block: choosing the tasks with the proper
+            <code>member</code> property.</p>
+        <p>One of the most important features of functional programming is that it makes it easy to shift focus in
+            this manner.</p>
+    </div>
+</section>
+
+
+
 <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
 <a href="#" class="deck-next-link" title="Next">&#8594;</a>
 

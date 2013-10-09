@@ -3,8 +3,8 @@ var propMatches = use(pipe).over(prop, eq);
 var getIncompleteTaskSummariesForMemberFunctional = function(memberName) {
     return fetchData()
         .then(get('tasks'))
-        .then(reject(propMatches('complete', true)))
         .then(filter(propMatches('member', memberName)))
+        .then(reject(propMatches('complete', true)))
         .then(map(pick(['id', 'dueDate', 'title', 'priority'])))
         .then(sortBy(prop('dueDate')));
 };
@@ -18,7 +18,7 @@ var getIncompleteTaskSummariesForMemberImperative = function(memberName) {
         .then(function(tasks) {
             var results = [];
             for (var i = 0, len = tasks.length; i < len; i++) {
-                if (!tasks[i].complete) {
+                if (tasks[i].member === memberName) {
                     results.push(tasks[i]);
                 }
             }
@@ -27,7 +27,7 @@ var getIncompleteTaskSummariesForMemberImperative = function(memberName) {
         .then(function(tasks) {
             var results = [];
             for (var i = 0, len = tasks.length; i < len; i++) {
-                if (tasks[i].member === memberName) {
+                if (!tasks[i].complete) {
                     results.push(tasks[i]);
                 }
             }
@@ -58,19 +58,19 @@ var TaskList = (function() {
     var TaskList = function(/*Task[]*/ tasks) {
         this.tasks = tasks;
     };
-    TaskList.prototype.chooseByCompletion = function(completion) {
+    TaskList.prototype.chooseByMember = function(memberName) {
         var results = [];
         for (var i = 0, len = this.tasks.length; i < len; i++) {
-            if (this.tasks[i].complete == completion) {
+            if (this.tasks[i].member === memberName) {
                 results.push(this.tasks[i]);
             }
         }
         this.tasks = results;
     };
-    TaskList.prototype.chooseByMember = function(memberName) {
+    TaskList.prototype.chooseByCompletion = function(completion) {
         var results = [];
         for (var i = 0, len = this.tasks.length; i < len; i++) {
-            if (this.tasks[i].member === memberName) {
+            if (this.tasks[i].complete == completion) {
                 results.push(this.tasks[i]);
             }
         }
@@ -115,8 +115,8 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
     return fetchData()
         .then(function(data) {
             var taskList = new TaskList(data.tasks);
-            taskList.chooseByCompletion(false);
             taskList.chooseByMember(memberName);
+            taskList.chooseByCompletion(false);
             var newTaskList = taskList.getSummaries();
             newTaskList.sort(new TaskListSorter("dueDate"));
             return newTaskList.tasks;
