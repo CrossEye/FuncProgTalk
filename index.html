@@ -21,6 +21,9 @@
         .deck-container .slide code {
             color: #c00; font-weight: bold;
         }
+        .deck-container .slide h2 code {
+            color: #888;
+        }
     </style>
 	<link rel="stylesheet" href="themes/transition/horizontal-slide.css">
 	<script src="modernizr.custom.js"></script>
@@ -770,7 +773,7 @@ formatName("James", "Earl", "Jones"); //=> "James Earl Jones"</textarea></div>
         <p>Here's a first pass:</p>
         <div><textarea class="code" mode="javascript" style="display: none;">.then(filter(function(task) {
     return task.member == memberName;
-})</textarea></div>
+}))</textarea></div>
         <br/>
         <p>(Remember that <code>memberName</code> was a parameter to our original function.)</p>
     </div>
@@ -799,7 +802,7 @@ formatName("James", "Earl", "Jones"); //=> "James Earl Jones"</textarea></div>
         <h3>Functional version</h3>
         <div><textarea class="code" mode="javascript" style="display: none;">.then(filter(function(task) {
     return task.member == memberName;
-})</textarea></div>
+}))</textarea></div>
     </div>
     <div class="slide">
         <br/>
@@ -808,6 +811,105 @@ formatName("James", "Earl", "Jones"); //=> "James Earl Jones"</textarea></div>
             <code>member</code> property.</p>
         <p>One of the most important features of functional programming is that it makes it easy to shift focus in
             this manner.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Rejecting elements</h2>
+    <p>The next block is similar, except that instead of using <code>filter</code>, we will use <code>reject</code>,
+        which behaves exactly the same except that it chooses those members of the list that <strong>don't</strong>
+        match the predicate.  We replace this code:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    var results = [];
+    for (var i = 0, len = tasks.length; i < len; i++) {
+        if (!tasks[i].complete) {
+            results.push(tasks[i]);
+        }
+    }
+    return results;
+})</textarea></div>
+    <br/>
+    <p>with this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(reject(function(task) {
+    return task.complete === true;
+)))</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Refactoring... already</h2>
+    <p>A reasonable question would be why with didn't do this instead, which would work equally well:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(filter(function(task) {
+    return task.complete !== true;
+))</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>The reason is that the similarity between these two blocks will offer us a chance to refactor our code
+            into something still more descriptive:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">function(task) {
+    return task.member == memberName;
+}</textarea></div>
+    <br/>
+    <div><textarea class="code" mode="javascript" style="display: none;">function(task) {
+    return task.complete === true;
+)</textarea></div>
+    </div>
+    <div class="slide">
+        <p>Both of these functions accept an object and return a boolean that describes whether a particular
+            property of the object has a given value.  Perhaps a good name for a function that generates such
+            functions would be <code>propMatches</code>.  Let's implement that.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Implementing <code>propMatches</code></h2>
+    <h3>Simplest Approach</h3>
+    <div><textarea class="code" mode="javascript" style="display: none;">var propMatches = function(prop, val) {
+    return function(obj) {
+        return obj[prop] === val;
+    };
+}</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>This works, and we could leave it there, but we're going to take another detour into a popular style of
+            functional programming known as <code>points-free</code> coding.</p>
+    </div>
+    <div class="slide">
+        <p>The name has nothing to do with <code>'.'</code> characters.  It derives from mathematics and has something
+            to do with homomorphisms on topological spaces.</p>
+    </div>
+    <div class="slide">
+        <p>This won't be on the test.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Points-free definitions</h2>
+    <p>With the functions <code>add</code> (which adds two numbers) and <code>reduce</code> (which runs the supplied
+        function against an accumulator and each element of the list, feeding the result of each call into the next one
+        and returning the final result), we can easily define a <code>sum</code> function like this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var sum = function(list) {
+    return reduce(add, 0, list);
+};</textarea></div>
+    <br/>
+    <div class="slide">
+        <br/>
+        <p>Because of the automatic currying, though, the following is entirely equivalent:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">var sum = reduce(add, 0);</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>This is the points-free style, definining functions without ever making direct reference to their
+            arguments.   There are plenty of arguments in favor of it, but the most important one might just be
+            the simplicity</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">var sum = reduce(add, 0);</textarea></div>
     </div>
 </section>
 
