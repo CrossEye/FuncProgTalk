@@ -1,4 +1,4 @@
-var propMatches = use(pipe).over(prop, eq);
+var propMatches = use(pipe).over(get, eq);
 
 var getIncompleteTaskSummariesForMemberFunctional = function(memberName) {
     return fetchData()

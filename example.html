@@ -124,7 +124,7 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
         });
 };
 
-var propMatches = use(pipe).over(prop, eq);
+var propMatches = use(pipe).over(get, eq);
 
 var getIncompleteTaskSummariesForMember_functional = function(memberName) {
     return fetchData()

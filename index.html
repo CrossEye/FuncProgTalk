@@ -513,7 +513,7 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
             taskList.chooseByMember(memberName);
             taskList.chooseByCompletion(false);
             var newTaskList = taskList.getSummaries();
-            newTaskList.sort(new TaskList.Sorter("dueDate"));
+            newTaskList.sort(new TaskListSorter("dueDate"));
             return newTaskList.tasks;
         });
 };</textarea></div>
@@ -906,10 +906,134 @@ formatName("James", "Earl", "Jones"); //=> "James Earl Jones"</textarea></div>
     </div>
     <div class="slide">
         <br/>
-        <p>This is the points-free style, definining functions without ever making direct reference to their
-            arguments.   There are plenty of arguments in favor of it, but the most important one might just be
-            the simplicity</p>
-        <div><textarea class="code" mode="javascript" style="display: none;">var sum = reduce(add, 0);</textarea></div>
+        <p>This is the points-free style, defining functions without ever making direct reference to their
+            arguments.</p>
+    </div>
+    <div class="slide">
+        <p>There are plenty of <del>arguments in favor of it</del>, plenty of <del>points to support it</del>,
+            reasons to like it, but the most important one might just be the simplicity.  There is a great deal to be
+            said for elegant, readable code.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>A points-free version of <code>propMatches</code></h2>
+    <p>Can we redefine the following in a points-free style?</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var propMatches = function(prop, val) {
+    return function(obj) {
+        return obj[prop] === val;
+    };
+}</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>Here's a version that is closer to points-free:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">var propMatches = function(prop, val) {
+    return compose(eq(val), get(prop));
+}</textarea></div>
+        <div class="slide">
+            <br/>
+            <p>Huh?  What?  <code>compose</code>? <code>eq</code>?</p>
+        </div>
+        <div class="slide">
+           <code>eq</code> is easy:  like all good functions of multiple parameters, it's curried, and it simply reports
+                whether its two arguments are equal.  So <code>eq(val)</code> is a function which reports whether its
+                parameter has the same value as does <code>val</code>.  But now we need to discuss <code>compose</code>.
+        </div>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Functional composition</h2>
+    <p>I have <a href="http://scott.sauyet.com/Javascript/Talk/Compose/">another short talk</a> dedicated entirely to
+        techniques of functional composition.  This is a very brief overview:</p>
+    <p>In mathematics <code>f &#8728; g</code> (pronounced "f composed with g") is the function that given <code>x</code>,
+       returns <code>f(g(x))</code>.</p>
+    <p>So if we follow the mathematical model <code>compose(add1, square)(x)</code> should equal <code>add1(square(x))</code>.</p>
+    <br/>
+    <div class="slide">
+        <h3>Simplest Implementation</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">var compose = function(f, g) {
+    return function(x) {
+        return f(g(x));
+    };
+};</textarea></div>
+        <br/>
+        <p>Note that Ramda also defines <code>pipe</code>, which does much the same thing, but runs the functions
+            in the opposite order.  So <code>pipe(add1, square)(x)</code> equals <code>square(add1(x))</code>.  Both
+            styles have their uses.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Back to <code>propMatches</code></h2>
+    <p>So now this definition makes sense:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var propMatches = function(prop, val) {
+    return pipe(get(prop), eq(val));
+}</textarea></div>
+    <br/>
+    <p>Note the switch from <code>compose</code> to <code>pipe</code>.</p>
+    <div class="slide">
+        <p>This gives us a further way to clean it up, and make it entirely points-free, using a useful feature of Ramda we
+            haven't seen implemented in other libraries, which we call (for now) <code>use-over</code>.  Used like
+            <code>use(func).over(transformer1, ... transformerN)</code>, this returns a function which accepts N parameters,
+            feeds them to the respective transformers, and then calls <code>func</code> using the results of all these.
+            This gives us the final version of propMatches:</p>
+    </div>
+    <div class="slide">
+        <div><textarea class="code" mode="javascript" style="display: none;">var propMatches = use(pipe).over(get, eq);</textarea></div>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Using our new function</h2>
+    <p>This function seems quite useful, and we might want to fold it into Ramda one day, but it's not there now.  Still,
+        all these explanations aside, it was only a minute or two of work to do this refactoring and arrive at a
+        fairly simple version of <code>propMatches</code>.  We would plug it back in like this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var propMatches = use(pipe).over(get, eq);
+
+// ...
+
+.then(filter(propMatches('member', memberName)))
+.then(reject(propMatches('complete', true)))</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>New objects from old</h2>
+    <p>The next block we wanted to update looked like this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    var results = [], task;
+    for (var i = 0, len = tasks.length; i < len; i++) {
+        task = tasks[i];
+        results.push({
+            id: task.id,
+            dueDate: task.dueDate,
+            title: task.title,
+            priority: task.priority
+        })
+    }
+    return results;
+})</textarea></div>
+    <div class="slide">
+        <br/>
+        <h3>Functional version:</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(map(pick(['id', 'dueDate', 'title', 'priority'])))</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>You're a smart bunch, right?  I probably don't even have to explain what <code>pick</code> does, right?</p>
+    </div>
+    <div class="slide">
+        <p>Good, then we can move on to discuss <code>map</code>.</p>
     </div>
 </section>
 
