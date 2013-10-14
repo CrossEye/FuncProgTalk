@@ -12,6 +12,13 @@ Notes for FP Talk
   languages.)  Think also of skipping a number of `if` statements, especially
   in pattern-matching languages.
 
+* Important reasons for using FP:
+
+  ** Straightforward unit testing
+  ** Easier debugging
+  ** Simple concurrency
+  ** Elegance and simplicity
+
 * Some features of FP:
 
   ** First-class functions

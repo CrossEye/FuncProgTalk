@@ -6,7 +6,7 @@ var getIncompleteTaskSummariesForMemberFunctional = function(memberName) {
         .then(filter(propMatches('member', memberName)))
         .then(reject(propMatches('complete', true)))
         .then(map(pick(['id', 'dueDate', 'title', 'priority'])))
-        .then(sortBy(prop('dueDate')));
+        .then(sortBy(get('dueDate')));
 };
 
 
