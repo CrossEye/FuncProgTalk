@@ -1125,6 +1125,135 @@ var shouts = map(toUpperCase, ["oy", "vey"]); //=> ["OY", "VEY"]</textarea></div
 
 
 
+<section class="slide">
+    <h2>Recap &ndash; Imperative</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var getIncompleteTaskSummariesForMember_imperative = function(memberName) {
+    return fetchData()
+        .then(function(data) {
+            return data.tasks;
+        })
+        .then(function(tasks) {
+            var results = [];
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                if (tasks[i].member == memberName) {
+                    results.push(tasks[i]);
+                }
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            var results = [];
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                if (!tasks[i].complete) {
+                    results.push(tasks[i]);
+                }
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            var results = [], task;
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                task = tasks[i];
+                results.push({
+                    id: task.id,
+                    dueDate: task.dueDate,
+                    title: task.title,
+                    priority: task.priority
+                })
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            tasks.sort(function(first, second) {
+                return first.dueDate - second.dueDate;
+            });
+            return tasks;
+        });</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Recap &ndash; Functional</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var propMatches = use(pipe).over(get, eq); // TODO: move to library?
+
+var getIncompleteTaskSummariesForMemberFunctional = function(memberName) {
+    return fetchData()
+        .then(get('tasks'))
+        .then(filter(propMatches('member', memberName)))
+        .then(reject(propMatches('complete', true)))
+        .then(map(pick(['id', 'dueDate', 'title', 'priority'])))
+        .then(sortBy(get('dueDate')));
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Not the Library</h2>
+    <p>It's important to note that nothing in here is meant to promote the Ramda library in particular.</p>
+    <p>While I'm certainly partial to it, the only thing that we used in here that was not entirely common to the
+        majority of functional programming libraries (across many languages, in fact) was the
+        <code>use().over()</code> construct, and all that really gained us was to turn a short function into
+        a points-free one-liner.</p>
+    <p>Certain libraries make things easier than others, though.  The equivalent code using Underscore or LoDash, which
+        don't curry their functions by default, and which choose a different default parameter order, would involve
+        significantly more boilerplate.</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Most Important Functions</h2>
+    <p>We've seen what are probably the most important functions in functional programming:</p>
+    <ul>
+        <li class="slide"><code>curry</code></li>
+        <li class="slide"><code>compose</code></li>
+        <li class="slide"><code>map</code></li>
+        <li class="slide"><code>reduce</code></li>
+        <li class="slide"><code>filter</code></li>
+    </ul>
+    <p class="slide">There's one that to some might be conspicuous by it's absense:</p>
+    <ul>
+        <li class="slide"><code>forEach</code></li>
+    </ul>
+    <p class="slide">I would argue that this is not actually appropriate to functional programming, as its main
+        purpose is to help you achieve side-effects.  But many libraries do include one.</p>
+</section>
+
+
 <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
 <a href="#" class="deck-next-link" title="Next">&#8594;</a>
 
