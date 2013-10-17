@@ -48,7 +48,7 @@
         <li>How Functional Programming Differs From Other Paradigms</li>
         <li>Functional Programming in Javascript</li>
         <li>Advantages and Disadvantages of Functional Style</li>
-        <li><del>Interaction of Functional and Object-Oriented Styles</del></li>
+        <li>Interaction of Functional and Object-Oriented Styles</li>
     </ul>
 </section>
 
@@ -66,8 +66,6 @@
             <li>And some are essentially impossible at the language level.</li>
         </ul>
     </div>
-    <p class="slide">But one of the main points of functional programming is that you can think of results you want,
-        not of the steps you need to take to get them.</p>
 </section>
 
 
@@ -162,6 +160,207 @@ console.log(sumOfSquares([2, 3, 5]));</textarea>
         </div>
         <br/>
         <br/>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Functional Features in Javascript</h2>
+    <h3>Easily available in Javascript</h3>
+    <ul>
+        <li class="slide">First-class functions</li>
+        <li class="slide">Lambdas/Anonymous Functions with closures</li>
+        <li class="slide">Compact, even terse, functions</li>
+    </ul>
+    <h3 class="slide">Possible to accomplish in Javascript with some care</h3>
+    <ul>
+        <li class="slide">Mostly stateless processing</li>
+        <li class="slide">Side-effect-free function calls</li>
+    </ul>
+</section>
+
+
+
+<section class="slide">
+    <h2>Not available in current versions Javascript</h2>
+    <ul>
+        <li class="slide">Performant recursion through tail call optimization</li>
+        <li class="slide">Pattern matching (Haskell, Erlang)</li>
+        <li class="slide">Lazy Evaluation (Miranda, Haskell)</li>
+        <li class="slide">Homoiconicity (mostly LISP-like languages?)</li>
+    </ul>
+    <div class="slide">
+        <hr/>
+        <p>We will take a look a brief look at these functional programming features of other languages first, then turn
+           our focus to those things we can actually accomplish in Javascript.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Shared Example</h2>
+    <p>Following an example from <a href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">Paul Barry</a>
+       we will use the example of the chances of winning a lottery.  This calculates the odds of choosing the correct
+       `n` numbers out of the `p` possibilities.</p>
+    <p>Here is an iterative version of the code:</p>
+    <div>
+        <textarea  class="code" mode="javascript" style="display: none;" runnable="false">function odds(n, p) {
+    var acc = 1;
+    for(var i = 0; i < n; i++) {
+        acc *= (n - i) / (p - i);
+    }
+    return acc;
+}
+
+console.log(odds(3, 10)); //=> (3/10) * (2/9) * (1/8) => (1/120) => 0.008333...</textarea>
+    </div>
+    <br/>
+</section>
+
+
+
+<section class="slide">
+    <h2>Recursive Version</h2>
+    <p>This is similar, but written recursively:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;" runnable="false">// Recursive version
+
+function odds(n, p) {
+    return (n == 0) ? 1 : (n / p) * odds(n - 1, p - 1);
+}</textarea></div>
+
+    <div class="slide">
+        <br/>
+        <p>There are many reasons that functional programmers prefer recursion, but one very simple one is that
+           recursive functions are often much more elegant than their iterative cousins.  It's easier to reason
+           about them.</p>
+    </div>
+    <div class="slide">
+        <p>Unfortunately, they often don't perform as well.  All the overhead of creating stack contexts for
+           function calls tends to add up.  But certain kinds of recursive calls <em>can</em> be easily optimized.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>This code in tail-call formulation:</h2>
+    <div><textarea  class="code" mode="javascript" style="display: none;" runnable="false">var odds = (function(){
+    var odds1 = function(n, p, acc) {
+        return (n == 0) ? acc : odds1(n - 1, p - 1, (n / p) * acc);
+    }
+
+    return function(n, p) {
+        return odds1(n, p, 1)
+    }
+})();</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>Note that the recursive call in <code>odds1</code> is the last statement in its branch of the function.
+           If this is true for all recursive calls, then the function is <code>tail-recursive</code>, and the
+           compiler can replace the entire set of nested calls with simple <code>JUMP</code> operations.</p>
+    </div>
+    <div class="slide">
+        <p>Such optimizations are required by many functional languages.</p>
+    </div>
+    <div class="slide">
+        <p>This is slated to become required in the next version of the specification for Javascript, but it won't
+           be consistently available client-side for some time.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Pattern Matching</h2>
+    <p>Some languages make use of an interesting techniqe to define functions: pattern matching.  Rather than use
+       <code>if-blocks</code> in the body of the function, parameter-matching is used to choose which of a collection
+        of related functions should be called.  Here we can see it in Erlang.</p>
+    <div class="slide">
+        <h3>Simple recursive version</h3>
+        <div><textarea class="code" mode="erlang" style="display: none;">odds(0, _) -> 1;
+odds(N, P) -> (N / P) * odds(N - 1, P - 1).</textarea></div>
+
+    </div>
+    <div class="slide">
+        <br/>
+        <h3>Tail-call version</h3>
+        <div><textarea class="code" mode="erlang" style="display: none;">-export([odds/2]).
+
+odds(N, P) -> odds(N, P, 1).
+odds(0, _, Acc) -> Acc;
+odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
+    </div>
+
+</section>
+
+
+
+<section class="slide">
+    <h2>Lazy Evaluation</h2>
+    <p>Many of us are most familiar with languages that evaluate their expressions as soon as they're encountered.  But
+       there are some that wait until the last possible instant.  This can have some real benefits.</p>
+    <div class="slide">
+        <p>We'll switch examples here, as there's not much call to do lazy evaluation for lottery odds.  We will follow a
+           <a href="http://stackoverflow.com/a/284180/1243641">Haskell example</a> from Chris Eidhof</p>
+        <div><textarea class="code" mode="haskell" style="display: none;">quickSort [] = []
+quickSort (x:xs) = quickSort (filter (< x) xs)
+                   ++ [x]
+                   ++ quickSort (filter (>= x) xs)
+
+minimum ls = head (quickSort ls)</textarea></div>
+        <br/>
+        <p>Note that the right half of quicksort is not calculated in finding the minimum. (Also note the pattern matching here too!)</p>
+    </div>
+    <p class="slide">One <a href="http://stackoverflow.com/a/2165370/1243641">very interesting comparison</a> is that
+       lazy evaluation is to the CPU what garbage collection is to memory.  The garbage collector allows you to pretend
+       that you have infinite memory; lazy evaluation allows you to pretend that you have infinite processing power.</p>
+    <p class="slide">But there are many reasons to like lazy evaluation.  It allows you to operate on theoretically
+       infinite data structures, calculating only those parts you need.  And it allows you to define your own control
+       efficient control structures inside the language instead of only at the level of the language syntax.</p>
+    <br/>
+</section>
+
+
+
+<section class="slide">
+    <h2>Homoiconicity</h2>
+    <div class="slide">
+        <p>No groaning.  At one time you had to learn what <em>polymorphism</em> meant, too!</p>
+    </div>
+    <div class="slide">
+        <h3><em>homoiconicity</em></h3>
+        <ul>
+            <li><em>homo</em>: from the Greek <em>homo</em>, same</li>
+            <li><em>icon</em>: from the Greek <em>eikon</em>, likeness, image, portrait</li>
+            <li><em>icity</em>: from the Greek <em>icit</em>, extra letters to make words more pretentious</li>
+        </ul>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Homoiconicity in LISP-like languages</h2>
+    <p>Homoiconicity has to do with the fact that in some languages, programs are written in a format easily
+       interpreted also as a data structure.  In Scheme, the following is just a quoted list of three items,
+       <code>define</code>, <code>(square x)</code> (itself a list), and <code>(* x x)</code> (another list)</p>
+    <div>
+        <div class="code" mode="scheme" style="display: none;">'(define (square x) (* x x))</div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>But the following, which looks almost identical, is a function definition:</p>
+        <div>
+            <div class="code" mode="scheme" style="display: none;">(define (square x) (* x x))</div>
+        </div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>LISP-like languages can use this feature to build very powerful domain-specific languages.  Many would
+           claim that this is the key feature that has allowed LISP to become the oldest language still in widespread
+           use.</p>
     </div>
 </section>
 
@@ -442,8 +641,8 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
     <div class="slide">
         <br/>
         <p>Our <code>then</code> call needs a function, so <code>curry</code> must be doing something interesting with
-            this function, which should return an object propery, so that it insteads returns a new function.  We need
-            to take a detour to discuss <code>curry</code> a bit.</p>
+            this function, which should return an object propery, to instead returning a new function.  So we need to
+            take a detour to discuss <code>curry</code> a bit.</p>
     </div>
 </section>
 
@@ -472,6 +671,33 @@ var add42 = add(42);
 
 console.log(add42(10)); //=> 52
 console.log(add42(7)); // 49</textarea></div>
+    </div>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Currying multiple arguments</h2>
+    <p>Different version of currying work slightly differently.  In Ramda, you can pass any of the arguments at any
+        time to a curried function.  If the total arguments passed have not yet reached the required number, then
+        you will get back a new function.  If you reach (or exceed) that number, you will get back the final result.</p>
+    <div><textarea class="code" mode="javascript" style="display: none;" runnable="true">var formatName = curry(function(first, middle, last) {
+    return first + " " + middle + " " + last;
+});
+
+var f = formatName("James"); // returns a function
+var g = f("Earl"); // returns a function
+g("Jones"); //=> "James Earl Jones"
+var h = formatName("James", "Earl"); // returns a function
+h("Jones"); //=> "James Earl Jones"
+// Note that g and h are equivalent functions
+formatName("James", "Earl", "Jones"); //=> "James Earl Jones"</textarea></div>
+    <div>
+        <br/>
+        <p>Some insist that this is not truly currying, but should be called <code>partial application</code>.  They
+            can feel free to call it what they like.  It serves the same role as currying does in a more strongly
+            typed language.</p>
     </div>
 </section>
 
@@ -647,9 +873,7 @@ console.log(add42(7)); // 49</textarea></div>
     return function(obj) {
         return obj[prop] === val;
     };
-}
-// ...
-.then(reject(propMatches("complete", true)));</textarea></div>
+}</textarea></div>
     <div class="slide">
         <br/>
         <p>This works, and we could leave it there, but we're going to take another detour into a popular style of
@@ -738,7 +962,7 @@ console.log(add42(7)); // 49</textarea></div>
     };
 };</textarea></div>
         <br/>
-        <p>Ramda also defines <code>pipe</code>, which does much the same thing, but runs the functions
+        <p>Note that Ramda also defines <code>pipe</code>, which does much the same thing, but runs the functions
             in the opposite order.  So <code>pipe(add1, square)(x)</code> equals <code>square(add1(x))</code>.  Both
             styles have their uses.</p>
     </div>
@@ -753,8 +977,9 @@ console.log(add42(7)); // 49</textarea></div>
     return pipe(get(prop), eq(val));
 }</textarea></div>
     <br/>
+    <p>Note the switch from <code>compose</code> to <code>pipe</code>.</p>
     <div class="slide">
-        <p>Switching from <code>compose</code> to <code>pipe</code> gives us a further way to clean it up, and make it entirely points-free, using a useful feature of Ramda we
+        <p>This gives us a further way to clean it up, and make it entirely points-free, using a useful feature of Ramda we
             haven't seen implemented in other libraries, which we call (for now) <code>use-over</code>.  Used like
             <code>use(func).over(transformer1, ... transformerN)</code>, this returns a function which accepts N parameters,
             feeds them to the respective transformers, and then calls <code>func</code> using the results of all these.
