@@ -41,6 +41,10 @@ Notes for FP Talk
 
 * Consider mentioning John Hugh's paper [Why Functional Programming 
   Matters][jh1]
+  
+* Comics:
+  ** http://imgs.xkcd.com/comics/tabletop_roleplaying.png
+  ** http://imgs.xkcd.com/comics/functional.png
 
 
 

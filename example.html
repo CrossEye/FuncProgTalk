@@ -126,11 +126,19 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
 
 var propMatches = use(pipe).over(get, eq);
 
+//var getIncompleteTaskSummariesForMember_functional = function(memberName) {
+//    return fetchData()
+//        .then(get('tasks'))
+//        .then(filter(propMatches('member', memberName)))
+//        .then(reject(propMatches('complete', true)))
+//        .then(map(pick(['id', 'dueDate', 'title', 'priority'])))
+//        .then(sortBy(get('dueDate')));
+//};
+
 var getIncompleteTaskSummariesForMember_functional = function(memberName) {
     return fetchData()
         .then(get('tasks'))
-        .then(filter(propMatches('member', memberName)))
-        .then(reject(propMatches('complete', true)))
+        .then(filter(andFn(propMatches('member', memberName), notFn(propMatches('complete', true)))))
         .then(map(pick(['id', 'dueDate', 'title', 'priority'])))
         .then(sortBy(get('dueDate')));
 };

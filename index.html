@@ -952,7 +952,7 @@ var shouts = map(toUpperCase, ["oy", "vey"]); //=> ["OY", "VEY"]</textarea></div
     <h2>Recap &ndash; Functional</h2>
     <div><textarea class="code" mode="javascript" style="display: none;">var propMatches = use(pipe).over(get, eq); // TODO: move to library?
 
-var getIncompleteTaskSummariesForMemberFunctional = function(memberName) {
+var getIncompleteTaskSummariesForMember_functional = function(memberName) {
     return fetchData()
         .then(get('tasks'))
         .then(filter(propMatches('member', memberName)))
