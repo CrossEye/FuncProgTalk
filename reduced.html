@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=1024, user-scalable=no">
+
+	<title>Functional Programming</title>
+
+	<link rel="stylesheet" href="core/deck.core.css">
+	<link rel="stylesheet" href="extensions/goto/deck.goto.css">
+	<link rel="stylesheet" href="extensions/menu/deck.menu.css">
+	<link rel="stylesheet" href="extensions/navigation/deck.navigation.css">
+	<link rel="stylesheet" href="extensions/status/deck.status.css">
+	<link rel="stylesheet" href="extensions/hash/deck.hash.css">
+	<link rel="stylesheet" href="extensions/scale/deck.scale.css">
+    <link rel="stylesheet" href="extensions/codemirror/deck.codemirror.css">
+    <link rel="stylesheet" href="extensions/codemirror/themes/default.css">
+	<link rel="stylesheet" href="themes/style/swiss.css">
+    <style type="text/css">
+        .deck-container .slide code {
+            color: #c00; font-weight: bold;
+        }
+        .deck-container .slide h2 code {
+            color: #888;
+        }
+        .deck-container > .slide .deck-before, .deck-container > .slide .deck-previous {
+            opacity: 1;
+        }
+    </style>
+	<link rel="stylesheet" href="themes/transition/horizontal-slide.css">
+	<script src="modernizr.custom.js"></script>
+</head>
+<body class="deck-container">
+
+
+
+<section class="slide">
+	<h1>Functional Programming</h1>
+    <h2>Scott Sauyet</h2>
+</section>
+
+
+
+<section class="slide">
+	<h2>An Overview of Functional Techniques<br/>
+        (for non FP'ers) using Javascript</h2>
+    <h3>Agenda</h3>
+    <ul>
+        <li>What is Functional Programming?</li>
+        <li>How Functional Programming Differs From Other Paradigms</li>
+        <li>Functional Programming in Javascript</li>
+        <li>Advantages and Disadvantages of Functional Style</li>
+        <li><del>Interaction of Functional and Object-Oriented Styles</del></li>
+    </ul>
+</section>
+
+
+
+<section class="slide">
+	<h2>What is Functional Programming?</h2>
+    <div class="slide">
+        <h3>No Single Definition</h3>
+        <p>There is no clear, widely-accepted definition of Functional Programming.  It is a collection of
+           related featues which cohere well into a very useful style of programming.</p>
+        <ul>
+            <li>Some of these features are readily available in Javascript.</li>
+            <li>Others can be used if care is taken.</li>
+            <li>And some are essentially impossible at the language level.</li>
+        </ul>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Chief difference between OOP and FP</h2>
+    <p>Reg Braithwaite has a <a href="http://raganwald.com/2013/04/08/functional-vs-OOP.html">good description</a>
+       of the central difference between these two paradigms.</p>
+    <p class="slide">OO focuses on the <em>differences</em> in the data,
+       while FP concentrates on <em>consistent data structures</em>.</p>
+    <div class="slide">
+        <div style="float:left;width:45%;margin-right:3%;clear:both;">
+            <h3>Object-Oriented</h3>
+            <ul>
+                <li>Data and the operations upon it are tightly coupled</li>
+                <li>Objects hide their implementation of operations from other objects via their interfaces</li>
+                <li>The central model for abstraction is the data itself</li>
+                <li>The central activity is composing new objects and extending existing objects by adding new methods
+                    to them</li>
+            </ul>
+        </div>
+        <div class="slide" style="float:left;width:45%;margin-right:3%;">
+            <h3>Functional</h3>
+            <ul>
+                <li>Data is only loosely coupled to functions</li>
+                <li>Functions hide their implementation, and the language’s abstractions speak to functions and the way
+                    they are combined or expressed</li>
+                <li>The central model for abstraction is the function, not the data structure.</li>
+                <li>The central activity is writing new functions</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>What does this mean in the business environment?</h2>
+    <p>Is one of these techniques the clear-cut winner in the business world?  Is it functional or object-oriented?</p>
+    <div class="slide">
+        <h3>Are you sure?</h3>
+    </div>
+    <div class="slide">
+        <br/>
+        <h3>How much business logic is written like this?</h3>
+        <div>
+            <div class="code" mode="plsql" style="display: none;">SELECT orders.order_id, orders.order_date, suppliers.supplier_name
+    FROM suppliers
+    RIGHT OUTER JOIN orders
+    ON suppliers.supplier_id = orders.supplier_id
+    WHERE orders.order_status = 'INCOMPLETE'
+    ORDER BY orders.order_date DESC;</div>
+        </div>
+        <div class="slide">
+            <br/>
+            <p>SQL is not a functional language <em>per se</em> but it shares the important characteristic of being
+               <strong>declarative</strong>.</p>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Declarative vs Imperative Programming</h2>
+    <ul>
+        <li><strong>Imperative:</strong> Describe <em>how</em> to do something.</li>
+        <li><strong>Declarative:</strong> Describe <em>what</em> you want done.</li>
+    </ul>
+    <div class="slide">
+        <h3>Imperative style</h3>
+        <div>
+            <textarea class="code" mode="javascript" style="display: none;" runnable="true">var sumOfSquares = function(list) {
+    var result = 0;
+    for (var i = 0; i < list.length; i++) {
+        result += square(list[i]);
+    }
+    return result;
+};
+
+console.log(sumOfSquares([2, 3, 5]));</textarea>
+        </div>
+    </div>
+    <br/>
+    <div class="slide">
+        <h3>Functional style</h3>
+        <div>
+            <textarea class="code" mode="javascript" style="display: none;" runnable="true">var sumOfSquares = pipe(map(square), sum);
+
+console.log(sumOfSquares([2, 3, 5]));</textarea>
+        </div>
+        <br/>
+        <br/>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Functional Features in Javascript</h2>
+    <h3>Easily available in Javascript</h3>
+    <ul>
+        <li class="slide">First-class functions</li>
+        <li class="slide">Lambdas/Anonymous Functions with closures</li>
+        <li class="slide">Compact, even terse, functions</li>
+    </ul>
+    <h3 class="slide">Possible to accomplish in Javascript with some care</h3>
+    <ul>
+        <li class="slide">Mostly stateless processing</li>
+        <li class="slide">Side-effect-free function calls</li>
+    </ul>
+</section>
+
+
+
+<section class="slide">
+    <h2>Not available in current versions Javascript</h2>
+    <ul>
+        <li class="slide">Performant recursion through tail call optimization</li>
+        <li class="slide">Pattern matching (Haskell, Erlang)</li>
+        <li class="slide">Lazy Evaluation (Miranda, Haskell)</li>
+        <li class="slide">Homoiconicity (mostly LISP-like languages?)</li>
+    </ul>
+    <div class="slide">
+        <hr/>
+        <p><del>We will take a look a brief look at these functional programming features of other languages first,</del>
+            then turn our focus to those things we can actually accomplish in Javascript.</p>
+    </div>
+</section>
+
+
+<!--
+<section class="slide">
+    <h2>Shared Example</h2>
+    <p>Following an example from <a href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">Paul Barry</a>
+       we will use the example of the chances of winning a lottery.  This calculates the odds of choosing the correct
+       `n` numbers out of the `p` possibilities.</p>
+    <p>Here is an iterative version of the code:</p>
+    <div>
+        <textarea  class="code" mode="javascript" style="display: none;" runnable="false">function odds(n, p) {
+    var acc = 1;
+    for(var i = 0; i < n; i++) {
+        acc *= (n - i) / (p - i);
+    }
+    return acc;
+}
+
+console.log(odds(3, 10)); //=> (3/10) * (2/9) * (1/8) => (1/120) => 0.008333...</textarea>
+    </div>
+    <br/>
+</section>
+
+
+
+<section class="slide">
+    <h2>Recursive Version</h2>
+    <p>This is similar, but written recursively:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;" runnable="false">// Recursive version
+
+function odds(n, p) {
+    return (n == 0) ? 1 : (n / p) * odds(n - 1, p - 1);
+}
+
+console.log(odds(3, 10)); //=> (3/10) * (2/9) * (1/8) => (1/120) => 0.008333...</textarea></div>
+
+    <div class="slide">
+        <br/>
+        <p>There are many reasons that functional programmers prefer recursion, but one very simple one is that
+           recursive functions are often much more elegant than their iterative cousins.  It's easier to reason
+           about them.</p>
+    </div>
+    <div class="slide">
+        <p>Unfortunately, they often don't perform as well.  All the overhead of creating stack contexts for
+           function calls tends to add up.  But certain kinds of recursive calls <em>can</em> be easily optimized.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>This code in tail-call formulation:</h2>
+    <div><textarea  class="code" mode="javascript" style="display: none;" runnable="false">var odds = (function(){
+    var odds1 = function(n, p, acc) {
+        return (n == 0) ? acc : odds1(n - 1, p - 1, (n / p) * acc);
+    }
+
+    return function(n, p) {
+        return odds1(n, p, 1)
+    }
+})();</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>Note that the recursive call in <code>odds1</code> is the last statement in its branch of the function.
+           If this is true for all recursive calls, then the function is <code>tail-recursive</code>, and the
+           compiler can replace the entire set of nested calls with simple <code>JUMP</code> operations.</p>
+    </div>
+    <div class="slide">
+        <p>Such optimizations are required by many functional languages.</p>
+    </div>
+    <div class="slide">
+        <p>This is slated to become required in the next version of the specification for Javascript, but it won't
+           be consistently available client-side for some time.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Pattern Matching</h2>
+    <p>Some languages make use of an interesting techniqe to define functions: pattern matching.  Rather than use
+       <code>if-blocks</code> in the body of the function, parameter-matching is used to choose which of a collection
+        of related functions should be called.  Here we can see it in Erlang.</p>
+    <div class="slide">
+        <h3>Simple recursive version</h3>
+        <div><textarea class="code" mode="erlang" style="display: none;">odds(0, _) -> 1;
+odds(N, P) -> (N / P) * odds(N - 1, P - 1).</textarea></div>
+
+    </div>
+    <div class="slide">
+        <br/>
+        <h3>Tail-call version</h3>
+        <div><textarea class="code" mode="erlang" style="display: none;">-export([odds/2]).
+
+odds(N, P) -> odds(N, P, 1).
+odds(0, _, Acc) -> Acc;
+odds(N, P, Acc) -> odds(N - 1, P - 1, (N / P) * Acc).</textarea></div>
+    </div>
+
+</section>
+
+
+
+<section class="slide">
+    <h2>Lazy Evaluation</h2>
+    <p>Many of us are most familiar with languages that evaluate their expressions as soon as they're encountered.  But
+       there are some that wait until the last possible instant.  This can have some real benefits.</p>
+    <div class="slide">
+        <p>We'll switch examples here, as there's not much call to do lazy evaluation for lottery odds.  We will follow a
+           <a href="http://stackoverflow.com/a/284180/1243641">Haskell example</a> from Chris Eidhof</p>
+        <div><textarea class="code" mode="haskell" style="display: none;">quickSort [] = []
+quickSort (x:xs) = quickSort (filter (< x) xs)
+                   ++ [x]
+                   ++ quickSort (filter (>= x) xs)
+
+minimum ls = head (quickSort ls)</textarea></div>
+        <br/>
+        <p>Note that the right half of quicksort is not calculated in finding the minimum. (Also note the pattern matching here too!)</p>
+    </div>
+    <p class="slide">One <a href="http://stackoverflow.com/a/2165370/1243641">very interesting comparison</a> is that
+       lazy evaluation is to the CPU what garbage collection is to memory.  The garbage collector allows you to pretend
+       that you have infinite memory; lazy evaluation allows you to pretend that you have infinite processing power.</p>
+    <p class="slide">But there are many reasons to like lazy evaluation.  It allows you to operate on theoretically
+       infinite data structures, calculating only those parts you need.  And it allows you to define your own
+       efficient control structures inside the language instead of only at the level of the language syntax.</p>
+    <br/>
+</section>
+
+
+
+<section class="slide">
+    <h2>Homoiconicity</h2>
+    <div class="slide">
+        <p>No groaning.  At one time you had to learn what <em>polymorphism</em> meant, too!</p>
+    </div>
+    <div class="slide">
+        <h3><em>homoiconicity</em></h3>
+        <ul>
+            <li><em>homo</em>: from the Greek <em>homo</em>, same</li>
+            <li><em>icon</em>: from the Greek <em>eikon</em>, likeness, image, portrait</li>
+            <li><em>icity</em>: from the Greek <em>icit</em>, extra letters to make words more pretentious</li>
+        </ul>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Homoiconicity in LISP-like languages</h2>
+    <p>Homoiconicity has to do with the fact that in some languages, programs are written in a format easily
+       interpreted also as a data structure.  In Scheme, the following is just a quoted list of three items,
+       <code>define</code>, <code>(square x)</code> (itself a list), and <code>(* x x)</code> (another list)</p>
+    <div>
+        <div class="code" mode="scheme" style="display: none;">'(define (square x) (* x x))</div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>But the following, which looks almost identical, is a function definition:</p>
+        <div>
+            <div class="code" mode="scheme" style="display: none;">(define (square x) (* x x))</div>
+        </div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>LISP-like languages can use this feature to build very powerful domain-specific languages.  Many would
+           claim that this is the key feature that has allowed LISP to become the oldest language still in widespread
+           use.</p>
+    </div>
+</section>
+-->
+
+
+<section class="slide">
+    <h2>Functional Programming in Javascript</h2>
+    <p>For the remainder of this talk, we will use the <a href="https://github.com/CrossEye/ramda">Ramda</a> library that
+        <a href="https://github.com/buzzdecafe">Michael Hurley</a> and I have been developing.  But there are a number
+        of interesting alternatives available:</p>
+    <ul>
+        <li class="slide"><a href="https://github.com/raganwald/allong.es">allong.es</a> is a fairly new functional
+            combinators and decorators library</li>
+        <li class="slide"><a href="https://github.com/fogus/lemonad">Lemonad</a> is a general-purpose functional
+            programming library</li>
+        <li class="slide"><a href="https://github.com/dtao/lazy.js">Lazy</a> and
+            <a href="https://github.com/goatslacker/lz">Lz</a> are libraries for lazy list processing</li>
+        <li class="slide"><a href="http://underscorejs.org/">Underscore</a> and its more performant clone,
+            <a href="http://lodash.com/">Lo-Dash</a>, are general utility libraries with a number of functional
+            capabilities</li>
+        <li class="slide"><a href="https://github.com/eliperelman/fn.js/">fn.js</a> is a very recent general-purpose
+            functional programming library, similar in ideas to Ramda (though of course not as good.
+            <img src="img/smiley.png" alt="Smiley" style="display:inline; margin-bottom: 0; height: 24px; width: 24px;"/>)<a/></li>
+        <li class="slide"><a href="http://osteele.com/sources/javascript/functional/">Functional Javascript</a>,
+            although perhaps outdated today, was the very first successful functional programming library for
+            Javascript</li>
+        <li class="slide" style="margin-top: 1em;">And many, many others</li>
+    </ul>
+</section>
+
+
+
+<section class="slide">
+    <h2>Using Functional Techniques in Javacript</h2>
+    <p>Converting an imperative Task List application into a functiona version.</p>
+    <p>We start by fetching something like the following data from the server:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var data = {
+    result: "SUCCESS",
+    interfaceVersion: "1.0.3",
+    requested: "10/17/2013 15:31:20".
+    lastUpdated: "10/16/2013 10:52:39",
+    tasks: [
+        {id: 104, complete: false,            priority: "high",
+                  dueDate: "11/29/2013",      member: "Scott",
+                  title: "Do something",      created: "9/22/2013"},
+        {id: 105, complete: false,            priority: "medium",
+                  dueDate: "11/22/2013",      member: "Lena",
+                  title: "Do something else", created: "9/22/2013"},
+        {id: 107, complete: true,             priority: "high",
+                  dueDate: "11/22/2013",      member: "Mike",
+                  title: "Fix the foo",       created: "9/22/2013"},
+        {id: 108, complete: false,            priority: "low",
+                  dueDate: "11/15/2013",      member: "Punam",
+                  title: "Adjust the bar",    created: "9/25/2013"},
+        {id: 110, complete: false,            priority: "medium",
+                  dueDate: "11/15/2013",      member: "Scott",
+                  title: "Rename everything", created: "10/2/2013"},
+        {id: 112, complete: true,             priority: "high",
+                  dueDate: "11/27/2013",      member: "Lena",
+                  title: "Alter all quuxes",  created: "10/5/2013"}
+        // , ...
+    ]
+};</textarea></div>
+    <br/>
+</section>
+
+
+
+<section class="slide">
+    <h2>Our Goal</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">tasks: [
+        {id: 104, complete: false,            priority: "high",
+                  dueDate: "11/29/2013",      member: "Scott",
+                  title: "Do something",      created: "9/22/2013"},
+        {id: 105, complete: false,            priority: "medium",
+                  dueDate: "11/22/2013",      member: "Lena",
+                  title: "Do something else", created: "9/22/2013"},
+    // , ...
+]</textarea></div>
+    <br/>
+    <p>Create a function accepting a `member` parameter that fetches the data, chooses her
+        incomplete tasks, returns the ids, priorities, titles, and due dates of those tasks, sorted by due date.</p>
+    <p>Since the fetch is asynchronous, we'll hook everything together with promises.  Ignore error-checking for now.</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Sample Imperative Approach</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var getIncompleteTaskSummariesForMember_imperative = function(memberName) {
+    return fetchData()
+        .then(function(data) {
+            return data.tasks;
+        })
+        .then(function(tasks) {
+            var results = [];
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                if (tasks[i].member == memberName) {
+                    results.push(tasks[i]);
+                }
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            var results = [];
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                if (!tasks[i].complete) {
+                    results.push(tasks[i]);
+                }
+            }
+            return results;
+        })</textarea></div>
+    <br/>
+    <p>(continued on the next slide.)</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Sample Imperative Approach (continued)</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">
+        .then(function(tasks) {
+            var results = [], task;
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                task = tasks[i];
+                results.push({
+                    id: task.id,
+                    dueDate: task.dueDate,
+                    title: task.title,
+                    priority: task.priority
+                })
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            tasks.sort(function(first, second) {
+                return first.dueDate - second.dueDate;
+            });
+            return tasks;
+        });
+};</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Similar Object-Oriented Approach</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;"> // main method
+var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
+    return fetchData()
+        .then(function(data) {
+            var taskList = new TaskList(data.tasks);
+            taskList.chooseByMember(memberName);
+            taskList.chooseByCompletion(false);
+            var briefTaskList = taskList.getSummaries();
+            briefTaskList.sort(new TaskListSorter("dueDate"));
+            return briefTaskList.tasks;
+        });
+};</textarea></div>
+    <br/>
+    <p>(continued on the next slide.)</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Object-Oriented Approach (continued)</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var TaskList = (function() {
+    var TaskList = function(/*Task[]*/ tasks) {
+        this.tasks = tasks;
+    };
+    TaskList.prototype.chooseByMember = function(memberName) {
+        var results = [];
+        for (var i = 0, len = this.tasks.length; i < len; i++) {
+            if (this.tasks[i].member === memberName) {
+                results.push(this.tasks[i]);
+            }
+        }
+        this.tasks = results;
+    };
+    TaskList.prototype.chooseByCompletion = function(completion) {
+        var results = [];
+        for (var i = 0, len = this.tasks.length; i < len; i++) {
+            if (this.tasks[i].complete == completion) {
+                results.push(this.tasks[i]);
+            }
+        }
+        this.tasks = results;
+    };</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Object-Oriented Approach (continued)</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">TaskList.prototype.getSummaries = function() {
+        var results = [], task;
+        for (var i = 0, len = this.tasks.length; i < len; i++) {
+            task = this.tasks[i];
+            results.push({
+                id: task.id,
+                dueDate: task.dueDate,
+                title: task.title,
+                priority: task.priority
+            })
+        }
+        return new TaskList(results);
+    };
+
+    TaskList.prototype.sort = function(/*TaskListSorter*/ sorter) {
+        this.tasks.sort(sorter.getSortFunction());
+    };
+
+    return TaskList;
+}());</textarea></div>
+    <br/>
+    <p>(continued on the next slide.)</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Object-Oriented Approach (continued)</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var TaskListSorter = (function()  {
+    var TaskListSorter = function(propName) {
+        this.propName = propName;
+    };
+    TaskListSorter.prototype.getSortFunction = function() {
+        var propName = this.propName;
+        return function(first, second) {
+            return first[propName] < second[propName] ? -1 :
+                   first[propName] > second[propName] ? +1 : 0;
+        }
+    };
+
+    return TaskListSorter;
+}());</textarea></div>
+    <br/>
+    <p>We could continue by defining <code>Task</code> and <code>MinimalTask</code>, but that's just overkill.</p>
+    <p class="slide">The difference between the imperative and the OO code is mostly organizational.  The same code
+        runs in both; it's just arranged differently.  (And it's full of `<code>this</code>` keywords.
+        <img src="img/smiley.png" alt="Smiley" style="display:inline; margin-bottom: 0; height: 24px; width: 24px;"/>)</p>
+    <p class="slide">This means that we can focus on the simpler imperative code.</p>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Converting to Functional Code</h2>
+    <p>We will now convert this code into concise, readable, functional code, one block at a time, explaining some of
+       the basic building blocks of functional programming as we go. First up is this little function:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(function(data) {
+    return data.tasks;
+})</textarea></div>
+    <br/>
+    <div class="slide">
+        <h3>Functional Version</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(get('tasks'))</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>So the obvious question, then, is, what is the <code>get</code> function?</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>The <code>get</code> Function</h2>
+    <p>This is the definition of the <code>get</code> function in the Ramda library:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var get = curry(function(prop, obj) {return obj[prop];});</textarea></div>
+    <br/>
+    <div class="slide">
+        <p>Ignoring the <code>curry</code> wrapper, this is pretty simple.  <code>get</code> is a function which accepts
+           a property name and an object, and returns the property of the object with that name.</p>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>Our <code>then</code> call needs a function.  So <code>curry</code> must be doing something interesting with
+            this function, which should return an object propery, to instead returning a new function.  We need to
+            take a detour to discuss <code>curry</code>.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Curry</h2>
+    <img src="img/curry.png"/>
+    <div class="slide">
+        <br/>
+        <h3>Very sorry, no delicious spicy food here.</h3>
+    </div>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Currying Functions</h2>
+    <p>Currying is the process of converting functions that take multiple arguments into ones that, when supplied
+        fewer arguments, return new functions that accept the remaining ones.</p>
+    <div class="slide">
+        <div><textarea class="code" mode="javascript" style="display: none;" runnable="true">var add = curry(function(a, b) {return a + b;});
+
+var addFortyTwo = add(42);
+
+console.log(addFortyTwo(10)); //=> 52
+console.log(addFortyTwo(7)); // 49</textarea></div>
+    </div>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Currying multiple arguments</h2>
+    <p>Different version of currying work slightly differently.  In Ramda, you keep getting back functions until you finally
+        pass the required number of parameters.</p>
+    <div><textarea class="code" mode="javascript" style="display: none;" runnable="true">var formatName = curry(function(first, middle, last) {
+    return first + " " + middle + " " + last;
+});
+
+var f = formatName("James"); // returns a function
+var g = f("Earl"); // returns a function
+g("Jones"); //=> "James Earl Jones"
+
+var h = formatName("James", "Earl"); // returns a function
+h("Jones"); //=> "James Earl Jones"
+
+// Note that g and h are equivalent functions
+formatName("James", "Earl", "Jones"); //=> "James Earl Jones"</textarea></div>
+    <div>
+        <br/>
+        <p>Some insist that this is not truly currying, but should be called <code>partial application</code>.  In any
+            case, it serves the same role as currying does in a more strongly typed language.</p>
+    </div>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Back to <code>get</code></h2>
+    <p>Remember the definition of <code>get</code>:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var get = curry(function(prop, obj) {return obj[prop];});</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>Now that we understand <code>curry</code>, we can see this is equivalent to <sup><code>*</code></sup>:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">var get = function(prop) {
+    return function(obj) {
+        return obj[prop];
+    };
+};</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>And that means that our new <code>get('tasks')</code> is equivalent to</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">function(obj) {
+    return obj['tasks'];
+}</textarea></div>
+    </div>
+    <br/>
+    <div class="slide"><sup><code>*</code></sup> Technically not quite equivalent.  Anyone see why?</div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Filtering</h2>
+    <p>So far, we've been able to replace this block:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(function(data) {
+    return data.tasks;
+})</textarea></div>
+    <br/>
+    <p>with this one:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(get('tasks'))</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>The next block to replace looks like this:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    var results = [];
+    for (var i = 0, len = tasks.length; i < len; i++) {
+        if (tasks[i].member == memberName) {
+            results.push(tasks[i]);
+        }
+    }
+    return results;
+})</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>We're running a filter on the input list, keeping those that have the correct
+            <code>member</code>.  Let's do this functionally.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Functional Filtering</h2>
+    <p><code>filter</code> is a very simple function.  You pass it a predicate function, which is used to determine if
+        an individual item should be included, and a list of items.  It returns you a new list of those that list
+        items that made it. </p>
+    <p>Remembering that the <code>then</code> block will pass the list of tasks to us, we really want to call filter
+        with a predicate, getting back a curried function that will accept a list.</p>
+    <div class = slide>
+        <p>Here's a first pass:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(filter(function(task) {
+    return task.member == memberName;
+}))</textarea></div>
+        <br/>
+        <p>(Remember that <code>memberName</code> was a parameter to our original function.)</p>
+    </div>
+</section>
+
+
+
+
+<section class="slide">
+    <h2>Focused Code</h2>
+    <p>So, for one thing, we've reduced the weight of our custom code:</p>
+    <div class="slide">
+        <h3>Original code</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    var results = [];
+    for (var i = 0, len = tasks.length; i < len; i++) {
+        if (tasks[i].member == memberName) {
+            results.push(tasks[i]);
+        }
+    }
+    return results;
+})</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <h3>Functional version</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(filter(function(task) {
+    return task.member == memberName;
+}))</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>But we've done something more important too:  We've moved the focus from iteration and updating the state
+            of a local collection to the real point of this block: choosing the tasks with the proper
+            <code>member</code> property.</p>
+        <p>An important feature of functional programming is that it makes it easier to focus on the logical issues.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Rejecting elements</h2>
+    <p>The next block is similar, except that instead of using <code>filter</code>, we will use <code>reject</code>,
+        which behaves exactly the same except that it chooses those members of the list that <strong>don't</strong>
+        match the predicate.  We replace this code:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    var results = [];
+    for (var i = 0, len = tasks.length; i < len; i++) {
+        if (!tasks[i].complete) {
+            results.push(tasks[i]);
+        }
+    }
+    return results;
+})</textarea></div>
+    <br/>
+    <p>with this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(reject(function(task) {
+    return task.complete === true;
+)))</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Refactoring... already</h2>
+    <p>A reasonable question would be why with didn't do this instead, which would work equally well:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(filter(function(task) {
+    return task.complete !== true;
+))</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>Because these two blocks are so similar, we have an early chance to refactor our code:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">function(task) {
+    return task.member == memberName;
+}</textarea></div>
+    <br/>
+    <div><textarea class="code" mode="javascript" style="display: none;">function(task) {
+    return task.complete === true;
+)</textarea></div>
+    </div>
+    <br/>
+    <div class="slide">
+        <p>Both of these functions accept an object and return a boolean that describes whether a particular
+            property of the object has a given value.  Perhaps a good name for a function that generates such
+            functions would be <code>propEq</code>.  Let's implement that.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Implementing <code>propEq</code></h2>
+    <h3>Simplest Approach</h3>
+    <div><textarea class="code" mode="javascript" style="display: none;">var propEq = function(prop, val) {
+    return function(obj) {
+        return obj[prop] === val;
+    };
+}</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>This works, and we could leave it there, but we're going to take another detour into a popular style of
+            functional programming known as <code>points-free</code> coding.</p>
+    </div>
+    <div class="slide">
+        <p>The name has nothing to do with <code>'.'</code> characters.  It derives from mathematics and has something
+            to do with homomorphisms on topological spaces.</p>
+        <br/>
+    </div>
+    <div class="slide">
+        <p>Don't worry&hellip;</p>
+    </div>
+    <div class="slide">
+        <p>This won't be on the test.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Points-free definitions</h2>
+    <p>With the functions <code>add</code> (which adds two numbers) and <code>reduce</code> (which runs the supplied
+        function against an accumulator and each element of the list, feeding the result of each call into the next one
+        and returning the final result), we can easily define a <code>sum</code> function like this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var sum = function(list) {
+    return reduce(add, 0, list);
+};</textarea></div>
+    <br/>
+    <div class="slide">
+        <br/>
+        <p>Because of the automatic currying, though, the following is entirely equivalent:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">var sum = reduce(add, 0);</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>This is the points-free style, defining functions without ever making direct reference to their
+            arguments.</p>
+    </div>
+    <div class="slide">
+        <p>There are plenty of <!--<del>arguments in favor of it</del>, plenty of <del>points to support it</del>, -->
+            reasons to like it, but the most important one might just be the simplicity.  There is a great deal to be
+            said for elegant, readable code.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>A points-free version of <code>propEq</code></h2>
+    <p>Can we redefine the following in a points-free style?</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var propEq = function(prop, val) {
+    return function(obj) {
+        return obj[prop] === val;
+    };
+}</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>Here's a version that is closer to points-free, removing the direct reference to <code>obj</code>:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">var propEq = function(prop, val) {
+    return compose(eq(val), get(prop));
+}</textarea></div>
+        <div class="slide">
+            <br/>
+            <p>Huh?  What?  <code>compose</code>? <code>eq</code>?</p>
+        </div>
+        <div class="slide">
+           <code>eq</code> is easy:  like all good functions of multiple parameters, it's curried, and it simply reports
+                whether its two arguments are equal.  So <code>eq(val)</code> is a function which reports whether its
+                parameter has the same value as does <code>val</code>.  But now we need to discuss <code>compose</code>.
+        </div>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Functional composition</h2>
+    <p>I have <a href="http://scott.sauyet.com/Javascript/Talk/Compose/">another short talk</a> dedicated entirely to
+        techniques of functional composition.  This is a very brief overview:</p>
+    <p>In mathematics <code>f &#8728; g</code> (pronounced "f composed with g") is the function that given <code>x</code>,
+       returns <code>f(g(x))</code>.</p>
+    <p>So if we follow the mathematical model <code>compose(add1, square)(x)</code> should equal <code>add1(square(x))</code>.</p>
+    <br/>
+    <div class="slide">
+        <h3>Simplest Implementation</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">var compose = function(f, g) {
+    return function(x) {
+        return f(g(x));
+    };
+};</textarea></div>
+        <br/>
+        <p>Note that Ramda also defines <code>pipe</code>, which does much the same thing, but runs the functions
+            in the opposite order.  So <code>pipe(add1, square)(x)</code> equals <code>square(add1(x))</code>.  Both
+            styles have their uses.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Back to <code>propEq</code></h2>
+    <p>So now this definition makes sense:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var propEq = function(prop, val) {
+    return pipe(get(prop), eq(val));
+}</textarea></div>
+    <br/>
+    <p>Note the switch from <code>compose</code> to <code>pipe</code>.</p>
+    <div class="slide">
+        <p>This gives us a further way to clean it up, and make it entirely points-free, using a useful feature of Ramda we
+            haven't seen implemented in other libraries, which we call <code>use-over</code>.  Used like
+            <div><textarea class="code" mode="javascript" style="display: none;">use(func).over(transformer1, ... transformerN)</textarea></div><br/>
+            this returns a function which accepts N parameters,
+            feeds them to the respective transformers, and then calls <code>func</code> using the results of all these.
+            This gives us the final version of propEq:</p>
+    </div>
+    <div class="slide">
+        <div><textarea class="code" mode="javascript" style="display: none;">var propEq = use(pipe).over(get, eq);</textarea></div>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Using our new function</h2>
+    <p>Since I wrote the first version of this talk, we've decided that this function is useful enough to include in Ramda
+        itself, so we didn't actually need to go to the work here of writing it.  Still,
+        all these explanations aside, it was only a minute or two of work to do this refactoring and arrive at a
+        fairly simple version of <code>propEq</code>.  We would plug it back in like this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">var propEq = use(pipe).over(get, eq);
+
+// ...
+
+.then(filter(propEq('member', memberName)))
+.then(reject(propEq('complete', true)))</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>New objects from old</h2>
+    <p>The next block we wanted to update looked like this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    var results = [], task;
+    for (var i = 0, len = tasks.length; i < len; i++) {
+        task = tasks[i];
+        results.push({
+            id: task.id,
+            dueDate: task.dueDate,
+            title: task.title,
+            priority: task.priority
+        })
+    }
+    return results;
+})</textarea></div>
+    <div class="slide">
+        <br/>
+        <h3>Functional version:</h3>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(map(pick(['id', 'dueDate', 'title', 'priority'])))</textarea></div>
+        <br/>
+        <p>You're a smart bunch, right?  I probably don't even have to explain what <code>pick</code> does, right?</p>
+    </div>
+    <div class="slide">
+        <p>Good, then we can move on to discuss <code>map</code>.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>The <code>map</code> function</h2>
+    <p><em>It is not down in any map; true places never are. &ndash; Herman Melville</em></p>
+    <br/>
+    <p>One of the most fundamental functions used in FP is <code>map</code>, which is used to convert one list into
+        a related one by running the same function against each member.</p>
+    <div class="slide">
+        <div><textarea class="code" mode="javascript" style="display: none;" runnable="true">var fiveSquares = map(square, [1, 2, 3, 4, 5]); // => [1, 4, 9, 16, 25];
+
+var shouts = map(toUpperCase, ["oy", "vey"]); //=> ["OY", "VEY"]</textarea></div>
+    </div>
+    <div class="slide">
+        <br/>
+        <p>There isn't much more to say about <code>map</code>, but it's important to point out that this function
+            and <code>reduce</code>, which we mentioned briefly earlier, are among the most important functional
+            programming tools around.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Partial clones of our objects.</h2>
+    <p>We used <code>map</code> like this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(map(pick(['id', 'dueDate', 'title', 'priority'])))</textarea></div>
+    <br/>
+    <p>The magic of currying is again at work here:</p>
+    <ul>
+        <li class="slide"><code>pick</code> accepts a list of properties and an object and return a partial clone, copying those
+            properties from the original.  Since we just pass in the properties, this curried function returns a
+            new function that accepts an object and returns that partial clone.</li>
+        <li class="slide"><code>map</code> accepts a function and a list an applies the function to the list.  But because it's
+            curried, and because we supply only the function generated by the curried <code>pick</code>, this one
+            also returns a new function which will accept a list and create these partial clones of each element in
+            the list.</li>
+        <li class="slide">This function is passed to <code>then</code>, which will simply pass along its parameter (whenever that
+            becomes ready) to our function and "return" the result of running our function against it.  (We simply
+            know because of the way prior calls have been built that this will be a list of tasks.)</li>
+    </ul>
+</section>
+
+
+
+<section class="slide">
+    <h2>A final task of some <code>sort</code></h2>
+    <p>The last segment we wanted to convert looked like this:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    tasks.sort(function(first, second) {
+        return first.dueDate - second.dueDate;
+    });
+    return tasks;
+});</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>We won't discuss the implementation of <code>sortBy</code>, but the basic idea is that it returns a new list
+            made from an old one by sorting the elements according to keys generated by the function passed to it.  For
+            instance:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">sortBy(function(person) {
+    return person.lastName + "," + person.firstName;
+}, people);</textarea></div>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Again with the <code>curry</code></h2>
+    <p>Again, we take advantage of the fact that our important functions are curried, and use
+        <code>get('dueDate')</code>.  This creates a function that, fed one of our task objects, returns its due date.
+        We can feed this into <code>sortBy</code> to get the following:</p>
+    <div><textarea class="code" mode="javascript" style="display: none;">.then(sortBy(get('dueDate')))</textarea></div>
+    <div class="slide">
+        <br/>
+        <p>While this is not a <strong>lot</strong> less code than the original:</p>
+        <div><textarea class="code" mode="javascript" style="display: none;">.then(function(tasks) {
+    tasks.sort(function(first, second) {
+        return first.dueDate - second.dueDate;
+    });
+    return tasks;
+});</textarea></div>
+        <br/>
+        <p>it clearly is a savings.  However, much more importantly, the code is all clearly aimed at our problem.  The
+            new code is much closer to a direct translation of the English specifications than is the original.</p>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Recap &ndash; Imperative</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var getIncompleteTaskSummariesForMember_imperative = function(memberName) {
+    return fetchData()
+        .then(function(data) {
+            return data.tasks;
+        })
+        .then(function(tasks) {
+            var results = [];
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                if (tasks[i].member == memberName) {
+                    results.push(tasks[i]);
+                }
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            var results = [];
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                if (!tasks[i].complete) {
+                    results.push(tasks[i]);
+                }
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            var results = [], task;
+            for (var i = 0, len = tasks.length; i < len; i++) {
+                task = tasks[i];
+                results.push({
+                    id: task.id,
+                    dueDate: task.dueDate,
+                    title: task.title,
+                    priority: task.priority
+                })
+            }
+            return results;
+        })
+        .then(function(tasks) {
+            tasks.sort(function(first, second) {
+                return first.dueDate - second.dueDate;
+            });
+            return tasks;
+        });</textarea></div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Recap &ndash; Functional</h2>
+    <div><textarea class="code" mode="javascript" style="display: none;">var getIncompleteTaskSummariesForMember_functional = function(memberName) {
+    return fetchData()
+        .then(get('tasks'))
+        .then(filter(propEq('member', memberName)))
+        .then(reject(propEq('complete', true)))
+        .then(map(pick(['id', 'dueDate', 'title', 'priority'])))
+        .then(sortBy(get('dueDate')));
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</textarea></div>
+
+</section>
+
+
+
+<section class="slide">
+    <div style="border:2px solid #ccc;padding:60px;z-index:999;position: absolute;top:3em;left:50%;margin-left:-309px">
+        <a href="https://twitter.com/WebReflection/status/327335256451588096"><img src="img/MichaelFeathersQuote.png" height="410" width="558"
+             alt="OO makes code understandable by encapsulating moving parts.  FP makes code understandable by minimizing moving parts." /></a>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Not the Library</h2>
+    <p>It's important to note that nothing in here is meant to promote the Ramda library in particular.</p>
+    <p>While I'm certainly partial to it, the only thing that we used in here that was not entirely common to the
+        majority of functional programming libraries (across many languages, in fact) was the
+        <code>use().over()</code> construct, and all that really gained us was to turn a short function into
+        a points-free one-liner.</p>
+    <p>Certain libraries make things easier than others, though.  The equivalent code using Underscore or LoDash, which
+        don't curry their functions by default, and which choose a different default parameter order, would involve
+        significantly more boilerplate.</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>Most Important Functions</h2>
+    <p>We've seen what are probably the most important functions in functional programming:</p>
+    <ul>
+        <li class="slide"><code>map</code></li>
+        <li class="slide"><code>reduce</code></li>
+        <li class="slide"><code>filter</code></li>
+        <li class="slide"><code>compose</code></li>
+        <li class="slide"><code>curry</code></li>
+    </ul>
+    <p class="slide">There's one that to some might be conspicuous by it's absence:</p>
+    <ul>
+        <li class="slide"><code>forEach</code></li>
+    </ul>
+    <p class="slide">I would argue that this is not actually appropriate to functional programming, as its main
+        purpose is to help you achieve side-effects.  But many libraries do include one.</p>
+</section>
+
+
+
+<section class="slide">
+    <h2>What We Gain from FP Style</h2>
+    <ul>
+        <li class="slide">Elegance and simplicity</li>
+        <li class="slide">Easier decomposition of problems</li>
+        <li class="slide">Code more closely tied to the problem domain</li>
+    </ul>
+    <div class="slide">
+        <p>And through these, we can also achieve</p>
+        <ul>
+            <li class="slide">Straightforward unit testing</li>
+            <li class="slide">Easier debugging</li>
+            <li class="slide">Simple concurrency</li>
+        </ul>
+    </div>
+</section>
+
+
+
+<section class="slide">
+    <h2>Questions?</h2>
+</section>
+
+
+
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+	<span class="deck-status-current"></span>
+	/
+	<span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+	<label for="goto-slide">Go to slide:</label>
+	<input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+	<datalist id="goto-datalist"></datalist>
+	<input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<script src="jquery-1.7.2.min.js"></script>
+<script src="core/deck.core.js"></script>
+
+<script src="core/deck.core.js"></script>
+<script src="extensions/hash/deck.hash.js"></script>
+<script src="extensions/menu/deck.menu.js"></script>
+<script src="extensions/goto/deck.goto.js"></script>
+<script src="extensions/status/deck.status.js"></script>
+<script src="extensions/navigation/deck.navigation.js"></script>
+<script src="extensions/scale/deck.scale.js"></script>
+<script src="extensions/codemirror/codemirror.js"></script>
+<script src="extensions/codemirror/mode/javascript/javascript.js"></script>
+<script src="extensions/codemirror/mode/erlang/erlang.js"></script>
+<script src="extensions/codemirror/mode/haskell/haskell.js"></script>
+<script src="extensions/codemirror/mode/scheme/scheme.js"></script>
+<script src="extensions/codemirror/mode/plsql/plsql.js"></script>
+<script src="extensions/codemirror/deck.codemirror.js"></script>
+<script src="ramda.js"></script>
+
+<script>
+    ramda.installTo(this);
+    var globals = sort(function(a, b) {return a < b ? - 1 : a > b ? +1 : 0}, keys(ramda)).join(",");
+    var square = function(x) {return x * x};
+    var sum = reduce(add, 0);
+    globals += ",square";
+	$(function() {
+        $("textarea.code").each(function(idx, textarea) {
+            $(textarea).attr("globals", globals);
+        });
+		$.deck('.slide');
+	});
+</script>
+</body>
+</html>
