@@ -1,6 +1,10 @@
 Notes for FP Talk
 =================
 
+(Things to consider to make this talk better for future audiences.)
+
+* Drop the promises style.  It adds nothing, and confuses non JS people.  Just use `pipe`.
+
 * Definitely reference Steve Yegge's post, [Execution in the Kingdom of 
   Nouns][sy1].  Possibly make verbs-versus-nouns central theme.
 
@@ -45,7 +49,6 @@ Notes for FP Talk
 * Comics:
   ** http://imgs.xkcd.com/comics/tabletop_roleplaying.png
   ** http://imgs.xkcd.com/comics/functional.png
-
 
 
   [mf1]: https://twitter.com/mfeathers/status/29581296216
