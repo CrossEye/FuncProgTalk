@@ -59,7 +59,7 @@
     <div class="slide">
         <h3>No Single Definition</h3>
         <p>There is no clear, widely-accepted definition of Functional Programming.  It is a collection of
-           related featues which cohere well into a very useful style of programming.</p>
+           related features which cohere well into a very useful style of programming.</p>
         <ul>
             <li>Some of these features are readily available in Javascript.</li>
             <li>Others can be used if care is taken.</li>
@@ -289,7 +289,7 @@ console.log(sumOfSquares([2, 3, 5]));</textarea>
                     dueDate: task.dueDate,
                     title: task.title,
                     priority: task.priority
-                })
+                });
             }
             return results;
         })
@@ -363,7 +363,7 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
                 dueDate: task.dueDate,
                 title: task.title,
                 priority: task.priority
-            })
+            });
         }
         return new TaskList(results);
     };
@@ -391,7 +391,7 @@ var getIncompleteTaskSummariesForMember_objectOriented = function(memberName) {
         return function(first, second) {
             return first[propName] < second[propName] ? -1 :
                    first[propName] > second[propName] ? +1 : 0;
-        }
+        };
     };
 
     return TaskListSorter;
@@ -615,7 +615,7 @@ console.log(add42(7)); // 49</textarea></div>
 
 <section class="slide">
     <h2>Refactoring... already</h2>
-    <p>A reasonable question would be why with didn't do this instead, which would work equally well:</p>
+    <p>A reasonable question would be why we didn't do this instead, which would work equally well:</p>
     <div><textarea class="code" mode="javascript" style="display: none;">.then(filter(function(task) {
     return task.complete !== true;
 ))</textarea></div>
@@ -647,7 +647,7 @@ console.log(add42(7)); // 49</textarea></div>
     return function(obj) {
         return obj[prop] === val;
     };
-}
+};
 // ...
 .then(reject(propMatches("complete", true)));</textarea></div>
     <div class="slide">
